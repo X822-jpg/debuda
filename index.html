@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000"><meta name="color-scheme" content="dark">
+<meta name="description" content="Debuda — made only for Roblox. Supports MM2, Deagle Duels and Da Hood.">
+<title>Debuda</title>
+<link rel="icon" type="image/png" href="debudalogo.png"><link rel="apple-touch-icon" href="debudalogo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="script.js" defer></script>
+</head>
+<body>
+<aside class="garden" aria-hidden="true">
+<svg viewBox="0 0 260 900" preserveAspectRatio="xMinYMax slice">
+<defs>
+<path id="pt" d="M0 0C-24-26-20-70 0-92C20-70 24-26 0 0Z"/>
+<path id="lf" d="M0 0C22-18 58-14 74 6C48 26 16 22 0 0Z"/>
+<radialGradient id="pg" cx="50%" cy="100%" r="100%"><stop offset="0" stop-color="#f5d0fe"/><stop offset=".6" stop-color="#c026d3"/><stop offset="1" stop-color="#701a75"/></radialGradient>
+<radialGradient id="cg"><stop offset="0" stop-color="#fef08a"/><stop offset="1" stop-color="#ca8a04"/></radialGradient>
+</defs>
+<g class="plant">
+<path class="stem" d="M110 200C80 320 150 430 105 560C60 690 135 790 100 900" fill="none" stroke="#15803d" stroke-width="7" stroke-linecap="round"/>
+<g class="leaves"><use href="#lf" transform="translate(104 306) rotate(205)" fill="#15803d"/><use href="#lf" transform="translate(115 394) rotate(-25)" fill="#16a34a"/><use href="#lf" transform="translate(120 484) rotate(205)" fill="#15803d"/><use href="#lf" transform="translate(90 652) rotate(-25)" fill="#16a34a"/><use href="#lf" transform="translate(101 754) rotate(205)" fill="#15803d"/><use href="#lf" transform="translate(110 835) rotate(-25)" fill="#16a34a"/></g>
+<g class="bloom" transform="translate(110 170)">
+<g fill="url(#pg)" stroke="#4a044e" stroke-width="1.2">
+<use href="#pt" transform="rotate(0)"/><use href="#pt" transform="rotate(36)"/><use href="#pt" transform="rotate(72)"/><use href="#pt" transform="rotate(108)"/><use href="#pt" transform="rotate(144)"/><use href="#pt" transform="rotate(180)"/><use href="#pt" transform="rotate(216)"/><use href="#pt" transform="rotate(252)"/><use href="#pt" transform="rotate(288)"/><use href="#pt" transform="rotate(324)"/>
+</g>
+<circle r="26" fill="url(#cg)"/><circle r="9" fill="#92400e" opacity=".55"/>
+</g>
+</g>
+<path class="ground" d="M0 900V884C60 876 160 876 260 886V900Z" fill="#052e16"/>
+</svg>
+</aside>
+
+<section class="welcome" id="welcome">
+<img src="debudalogo.png" alt="Debuda logo" width="150" height="150">
+<p class="kicker">ROBLOX ONLY</p>
+<h1>Hi, welcome to <span>Debuda</span></h1>
+<p class="alpha-pill">ALPHA · buying not open yet</p><p class="sub">Made only for Roblox. Supports MM2, Deagle Duels and Da Hood.</p>
+<button class="btn" id="enterBtn">Enter Debuda →</button>
+</section>
+
+<div class="app hidden" id="app">
+<div class="alphabar">⚠ DEBUDA IS IN ALPHA — buying is not open yet</div>
+<header class="top">
+<a class="brand" href="#" data-go="home"><img src="debudalogo.png" alt="" width="34" height="34"><b>DEBUDA</b></a>
+<nav id="nav"><button class="nav on" data-go="home">Home</button><button class="nav" data-go="games">Supported games</button><button class="nav" data-go="library">Library</button><button class="nav" data-go="roblox">Roblox</button></nav>
+<input id="search" type="search" placeholder="Search supported games…" maxlength="40" aria-label="Search games" autocomplete="off">
+<div class="acct" id="acct"></div>
+</header>
+<main>
+<section class="view" id="homeView">
+<div class="hero"><p class="kicker">ONLY FOR ROBLOX</p><h2>Debuda works in<br><span>these Roblox games.</span></h2><p>Currently supported: Murder Mystery 2, Deagle Duels and Da Hood. Go further with Debuda Alpha.</p><div class="row"><button class="btn" data-go="games">See supported games</button><button class="btn ghost" data-buy>Buy Alpha</button></div></div>
+<h3 class="h">Supported games</h3><div class="grid" id="featured"></div>
+<div class="banner"><div><p class="kicker">DEBUDA ALPHA</p><h3>Pick how many days you want.</h3><p>From 1 day to a full year — the longer, the cheaper.</p></div><button class="btn" data-buy>Choose days →</button></div>
+</section>
+<section class="view hidden" id="gamesView"><h1 class="t">Supported <span>games</span></h1><p class="muted">Debuda is made only for Roblox. These are the games it supports.</p><br>
+<div class="tabs" id="tabs"><button class="tab on" data-f="All">All</button><button class="tab" data-f="Mystery">Mystery</button><button class="tab" data-f="Shooter">Shooter</button><button class="tab" data-f="Action">Action</button></div>
+<div class="grid" id="catalog"></div><p class="empty hidden" id="none">No games found.</p></section>
+<section class="view hidden" id="libraryView"><h1 class="t">My <span>library</span></h1><p class="empty" id="libEmpty">Nothing saved yet. Open a supported game and press Save.</p><div class="grid" id="libGrid"></div></section>
+<section class="view hidden" id="robloxView"><h1 class="t">Roblox <span>script</span></h1>
+<p class="muted">Works only in Roblox, for MM2, Deagle Duels and Da Hood. Put it in a LocalScript under StarterPlayer › StarterPlayerScripts, then press Play.</p>
+<div class="row"><button class="btn" id="copyLua">Copy script</button><a class="btn ghost dl" href="debuda.lua" download="debuda.lua">Download .lua</a></div>
+<pre class="code" id="luaCode" tabindex="0">Loading…</pre></section>
+</main>
+<footer>© 2026 DEBUDA · ALPHA 2.0</footer>
+</div>
+
+<div class="back hidden" id="gameModal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="gTitle"><button class="x" data-close aria-label="Close">×</button><div class="art" id="gArt"><span id="gEmoji"></span></div><p class="kicker" id="gCat"></p><h2 id="gTitle"></h2><p id="gDesc" class="muted"></p><div class="row"><button class="btn" data-buy>Buy Alpha</button><button class="btn ghost" id="gSave">☆ Save</button></div></section></div>
+
+<div class="back hidden" id="buyModal"><section class="modal wide" role="dialog" aria-modal="true" aria-labelledby="bTitle"><button class="x" data-close aria-label="Close">×</button>
+<div class="step" id="pickStep"><p class="kicker">DEBUDA ALPHA</p><h2 id="bTitle">How many days?</h2><p class="muted">Price goes from $1 (1 day) up to $25 (365 days).</p>
+<div class="chips" id="chips"><button data-d="1">1 day</button><button data-d="7">7 days</button><button data-d="30">30 days</button><button data-d="90">90 days</button><button data-d="365">365 days</button></div>
+<label class="rng">Custom: <b id="dayOut">7</b> days<input type="range" id="days" min="1" max="365" value="7"></label>
+<div class="sum"><div><small>Total</small><div class="price" id="total">$1.00</div></div><div><small>Per day</small><b id="perDay"></b></div><div><small>You save</small><b id="save"></b></div><div><small>Ends</small><b id="ends"></b></div></div>
+<p class="lock" id="lockNote">🔒 Debuda is in Alpha. Clients cannot buy yet — you can only preview the prices.</p><button class="btn full" id="toCheckout" disabled>Not available in Alpha</button></div>
+<div class="step hidden" id="doneStep"><p class="kicker">ORDER</p><h2>Confirm your order</h2><ul class="recap" id="recap"></ul><button class="btn full" id="confirm">Confirm order</button><p class="note">Demo shop: no money is charged and no card data is collected. Real payments need Stripe or similar.</p></div>
+</section></div>
+
+<div class="back hidden" id="authModal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="aTitle"><button class="x" data-close aria-label="Close">×</button>
+<div class="tabs"><button class="tab on" data-auth="login">Log in</button><button class="tab" data-auth="register">Register</button></div>
+<h2 id="aTitle">Welcome back</h2>
+<form id="authForm" novalidate autocomplete="on">
+<label>Username<input id="user" name="username" autocomplete="username" maxlength="20" required></label>
+<label>Password<input id="pass" name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
+<div id="regOnly" class="hidden"><label>Confirm password<input id="pass2" type="password" autocomplete="new-password" maxlength="128"></label><div class="meter"><i id="meterBar"></i></div><small id="meterTxt" class="muted">Use 8+ characters, mixed case, numbers.</small></div>
+<p class="err" id="authErr" role="alert"></p>
+<button class="btn full" id="authBtn" type="submit">Log in</button></form>
+<p class="note">Passwords are hashed in your browser (PBKDF2) and never stored as plain text.</p></section></div>
+<div class="toast" id="toast" role="status"></div>
+</body></html>
