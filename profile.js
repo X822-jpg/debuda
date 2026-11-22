@@ -49,7 +49,7 @@ function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).inclu
  const b1=el('button','btn ghost sm',pvw[k]===i?'Previewing':'Preview'),b2=el('button','btn sm',own?(on?'Unequip':'Equip'):(SALES_OPEN?'Buy':'🔒 Alpha'));
  b1.onclick=()=>{pvw[k]=pvw[k]===i?null:i;renderShop()};b2.onclick=()=>buyEquip(k,i);if(!own&&!SALES_OPEN)b2.setAttribute('aria-disabled','true');
  const r=el('div','row2');r.append(b1,b2);d.append(th,rb,el('h4','',it[0]),el('div','pr',eur(it[2])),r);return d}
-function renderShop(){const p=pf(),eq=p.eq||{},o={};for(const k of ['t','f','n'])o[k]=pvw[k]!==null?pvw[k]:eq[k];
+function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked.':'Owner accounts: log in with GitHub in this browser to unlock everything.';const p=pf(),eq=p.eq||{},o={};for(const k of ['t','f','n'])o[k]=pvw[k]!==null?pvw[k]:eq[k];
  pCard($('#shopPv'),p,o,user?pname():'Your name');
  if(pvw.t!==null||pvw.f!==null||pvw.n!==null){const b=el('button','btn ghost sm','Reset preview');b.onclick=()=>{pvw={t:null,f:null,n:null};renderShop()};$('#shopPv').append(b)}
  $('#shopGrid').replaceChildren(...PK[shopKind].map((_,i)=>shopItem(shopKind,i)))}
@@ -61,6 +61,7 @@ function renderProfile(){const p=pf();pCard($('#profCard'),p,p.eq||{},pname());$
 function setAv(a){const p=pf();p.av=a;pfSave(p);renderProfile();renderAcct()}
 
 function pfInit(){
+ $('#resetBtn').onclick=()=>{if(!confirm('Reset ALL saved Debuda data in this browser (account, profile, items, login)?'))return;try{Object.keys(localStorage).filter(k=>k.startsWith('debuda.')&&k!=='debuda.v').forEach(k=>localStorage.removeItem(k));sessionStorage.clear()}catch{}location.href=location.pathname};
  $('#shopTabs').addEventListener('click',e=>{const b=e.target.closest('[data-sk]');if(!b)return;shopKind=b.dataset.sk;$$('[data-sk]').forEach(x=>x.classList.toggle('on',x===b));renderShop()});
  $('#rnBtn').onclick=()=>{const v=$('#rnIn').value.trim();if(!user)return;
   if(!/^[\p{L}\p{N} _.\-]{3,20}$/u.test(v))return toast('Name: 3–20 letters, numbers, space, _ . -');

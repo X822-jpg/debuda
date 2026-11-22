@@ -5,11 +5,13 @@ const GAMES=[
 {id:'dahood',name:'Da Hood',cat:'Action',desc:'Roblox: open street world with fights, cash and crews.',emoji:'🏙️',art:'dahood',tag:'SUPPORTED'}];
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const DATA_VERSION='2026-11-22-reset2'; // change this text to wipe everyone's saved data again
+try{if(localStorage.getItem('debuda.v')!==DATA_VERSION){Object.keys(localStorage).filter(k=>k.startsWith('debuda.')&&k!=='debuda.rt').forEach(k=>localStorage.removeItem(k));localStorage.setItem('debuda.v',DATA_VERSION)}}catch{}
 const SALES_OPEN=false; // Alpha: buying is locked. Set to true only when a real checkout exists.
 const ANCHORS=[[1,100],[7,500],[30,1200],[90,1900],[365,2500]]; // [days, cents]: $1 up to $25
 const eur=c=>'$'+(c/100).toFixed(2);
 let filter='All',active=null,days=7,mode='login',pendingBuy=false,saved=new Set(store.get('debuda.saved',[]));
-let user=null;setOwner(false);try{user=sessionStorage.getItem('debuda.session')}catch{}
+let user=null;try{user=sessionStorage.getItem('debuda.session')}catch{}
 
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600)}
@@ -48,8 +50,8 @@ function openAuth(m){closeAll();setMode(m||'login');open('authModal');$('#user')
 function renderAcct(){const a=$('#acct');a.replaceChildren();
  if(!user){const l=el('button','btn ghost','Log in'),r=el('button','btn','Register');l.onclick=()=>openAuth('login');r.onclick=()=>openAuth('register');a.append(l,r);return}
  const u=store.get('debuda.users',{})[user],last=u&&u.orders&&u.orders[u.orders.length-1];
- const c=el('div','chip'),nb=el('button','link',pname());nb.onclick=()=>go('profile');c.append(miniAv(),nb);if(last&&new Date(last.ends)>new Date())c.append(el('small','','Alpha ✓'));
- const o=el('button','','Log out');o.onclick=()=>{user=null;try{sessionStorage.removeItem('debuda.session')}catch{}renderAcct();toast('Logged out.')};c.append(o);a.append(c)}
+ const c=el('div','chip'),nb=el('button','link',pname());nb.onclick=()=>go('profile');c.append(miniAv(),nb);if(isOwner())c.append(el('small','','👑 Owner'));if(last&&new Date(last.ends)>new Date())c.append(el('small','','Alpha ✓'));
+ const o=el('button','','Log out');o.onclick=()=>{user=null;setOwner(false);try{localStorage.removeItem('debuda.rt')}catch{}try{sessionStorage.removeItem('debuda.session')}catch{}renderAcct();toast('Logged out.')};c.append(o);a.append(c)}
 $('#authForm').addEventListener('submit',async e=>{e.preventDefault();const err=$('#authErr'),btn=$('#authBtn');err.textContent='';
  const name=$('#user').value.trim().toLowerCase(),pw=$('#pass').value;
  if(!/^[a-z0-9_]{3,20}$/.test(name))return err.textContent='Username: 3–20 letters, numbers or _.';
@@ -111,10 +113,20 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-oauth]');i
  const p=b.dataset.oauth;if(!['discord','github'].includes(p))return;
  if(!CFG.SUPABASE_URL||!CFG.SUPABASE_ANON_KEY)return $('#authErr').textContent='Login with '+p+' is not set up yet (add keys in config.js).';
  location.href=CFG.SUPABASE_URL+'/auth/v1/authorize?provider='+p+'&redirect_to='+encodeURIComponent(location.origin+location.pathname)});
-(async()=>{const m=location.hash.match(/access_token=([^&]+)/);if(!m)return;history.replaceState(null,'',location.pathname);
- try{const r=await fetch(CFG.SUPABASE_URL+'/auth/v1/user',{headers:{apikey:CFG.SUPABASE_ANON_KEY,Authorization:'Bearer '+decodeURIComponent(m[1])}});
-  if(!r.ok)throw 0;const u=await r.json(),md=u.user_metadata||{};
-  const n=md.custom_claims&&md.custom_claims.global_name||md.full_name||md.user_name||u.email;if(!n)throw 0;
-  user=String(n).slice(0,40);adoptAv(md.avatar_url||md.picture);setOwner(!!u.app_metadata&&u.app_metadata.provider==='github'&&OWNERS.includes(String(md.user_name||'').toLowerCase()));try{sessionStorage.setItem('debuda.session',user)}catch{}
-  $('#welcome').classList.add('hidden');$('#app').classList.remove('hidden');renderAcct();toast('Signed in as '+user)}
- catch{toast('Login failed. Try again.')}})();
+const sbH=()=>({apikey:CFG.SUPABASE_ANON_KEY,'Content-Type':'application/json'});
+async function sbUser(tok){const r=await fetch(CFG.SUPABASE_URL+'/auth/v1/user',{headers:{...sbH(),Authorization:'Bearer '+tok}});if(!r.ok)throw 0;return r.json()}
+async function sbRefresh(rt){const r=await fetch(CFG.SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:sbH(),body:JSON.stringify({refresh_token:rt})});if(!r.ok)throw 0;return r.json()}
+function applyUser(u){const md=u.user_metadata||{},n=md.custom_claims&&md.custom_claims.global_name||md.full_name||md.user_name||u.email;if(!n)throw 0;
+ const gi=(u.identities||[]).find(i=>i.provider==='github'),gd=gi&&gi.identity_data||{};
+ const gh=String(gd.user_name||gd.preferred_username||(u.app_metadata&&u.app_metadata.provider==='github'?md.user_name:'')||'').toLowerCase();
+ user=String(n).slice(0,40);try{sessionStorage.setItem('debuda.session',user)}catch{}
+ adoptAv(md.avatar_url||md.picture);setOwner(!!gh&&OWNERS.includes(gh));
+ $('#welcome').classList.add('hidden');$('#app').classList.remove('hidden');renderAcct();return user}
+(async()=>{if(!CFG.SUPABASE_URL||!CFG.SUPABASE_ANON_KEY)return;
+ const h=new URLSearchParams(location.hash.slice(1));let at=h.get('access_token'),rt=h.get('refresh_token');
+ if(at)history.replaceState(null,'',location.pathname);else rt=store.get('debuda.rt',null);
+ if(!at&&!rt)return;
+ try{let u;if(at){u=await sbUser(at);if(rt)store.set('debuda.rt',rt)}
+  else{const t=await sbRefresh(rt);store.set('debuda.rt',t.refresh_token);u=t.user||await sbUser(t.access_token)}
+  const nm=applyUser(u);if(at)toast('Signed in as '+nm+(isOwner()?' 👑':''))}
+ catch{if(at)toast('Login failed. Try again.');else try{localStorage.removeItem('debuda.rt')}catch{}}})();

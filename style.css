@@ -80,3 +80,4 @@ main{padding:28px;max-width:1150px}
 .panel input[type=text],#rnIn{background:#000;border:1px solid var(--line);border-radius:10px;padding:10px 13px;min-width:200px}
 .emojis{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.emo{background:#000;border:1px solid var(--line);border-radius:12px;width:44px;height:44px;font-size:22px}.emo:hover{border-color:var(--pu)}
 .up{cursor:pointer;display:inline-block}
+footer .link{color:var(--mu);font-size:12px;letter-spacing:.1em;text-decoration:underline}

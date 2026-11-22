@@ -65,7 +65,7 @@
 <pre class="code" id="luaCode" tabindex="0">Loading…</pre></section>
 <section class="view hidden" id="shopView"><h1 class="t">Debuda <span>shop</span></h1>
 <p class="muted">Titles, avatar frames and name fonts. Rarity goes from Common to Mythic, $4.99 to $30. Use Preview to try them on. Buying opens after Alpha.</p>
-<div class="pv" id="shopPv"></div>
+<div class="pv" id="shopPv"></div><p class="note" id="shopHint"></p>
 <div class="tabs" id="shopTabs"><button class="tab on" data-sk="t">Titles (15)</button><button class="tab" data-sk="f">Frames (12)</button><button class="tab" data-sk="n">Fonts (10)</button></div>
 <div class="grid" id="shopGrid"></div></section>
 <section class="view hidden" id="profileView"><h1 class="t">My <span>profile</span></h1>
@@ -74,7 +74,7 @@
 <div class="panel"><h3>Avatar</h3><div class="row2"><label class="btn ghost up">Upload image<input type="file" id="avFile" accept="image/png,image/jpeg,image/webp" hidden></label><button class="btn ghost" id="avProv">Use Discord/GitHub avatar</button></div><div class="emojis" id="emojis"></div></div>
 <div class="panel"><h3>My items</h3><div class="row2" id="myItems"></div></div></section>
 </main>
-<footer>© 2026 DEBUDA · ALPHA 2.0</footer>
+<footer>© 2026 DEBUDA · ALPHA 2.0 · <button class="link" id="resetBtn">Reset saved data</button></footer>
 </div>
 
 <div class="back hidden" id="gameModal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="gTitle"><button class="x" data-close aria-label="Close">×</button><div class="art" id="gArt"><span id="gEmoji"></span></div><p class="kicker" id="gCat"></p><h2 id="gTitle"></h2><p id="gDesc" class="muted"></p><div class="row"><button class="btn" data-buy>Buy Alpha</button><button class="btn ghost" id="gSave">☆ Save</button></div></section></div>
