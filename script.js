@@ -9,7 +9,7 @@ const SALES_OPEN=false; // Alpha: buying is locked. Set to true only when a real
 const ANCHORS=[[1,100],[7,500],[30,1200],[90,1900],[365,2500]]; // [days, cents]: $1 up to $25
 const eur=c=>'$'+(c/100).toFixed(2);
 let filter='All',active=null,days=7,mode='login',pendingBuy=false,saved=new Set(store.get('debuda.saved',[]));
-let user=null;try{user=sessionStorage.getItem('debuda.session')}catch{}
+let user=null;setOwner(false);try{user=sessionStorage.getItem('debuda.session')}catch{}
 
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600)}
@@ -66,7 +66,7 @@ $('#authForm').addEventListener('submit',async e=>{e.preventDefault();const err=
    const h=await hash(pw,u?unhex(u.salt):new Uint8Array(16));
    if(!u||!same(h,u.hash)){const n=lock.n+1;store.set('debuda.lock',{n:n%5?n:0,until:n%5?0:Date.now()+60000});return err.textContent='Wrong username or password.'}
   }
-  store.set('debuda.lock',{n:0,until:0});user=name;try{sessionStorage.setItem('debuda.session',name)}catch{}
+  store.set('debuda.lock',{n:0,until:0});user=name;setOwner(false);try{sessionStorage.setItem('debuda.session',name)}catch{}
   $('#authForm').reset();renderAcct();toast(mode==='register'?'Account created!':'Welcome, '+name+'!');
   if(pendingBuy){pendingBuy=false;toCheckout()}else closeAll();
  }finally{btn.disabled=false}});
@@ -115,6 +115,6 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-oauth]');i
  try{const r=await fetch(CFG.SUPABASE_URL+'/auth/v1/user',{headers:{apikey:CFG.SUPABASE_ANON_KEY,Authorization:'Bearer '+decodeURIComponent(m[1])}});
   if(!r.ok)throw 0;const u=await r.json(),md=u.user_metadata||{};
   const n=md.custom_claims&&md.custom_claims.global_name||md.full_name||md.user_name||u.email;if(!n)throw 0;
-  user=String(n).slice(0,40);adoptAv(md.avatar_url||md.picture);try{sessionStorage.setItem('debuda.session',user)}catch{}
+  user=String(n).slice(0,40);adoptAv(md.avatar_url||md.picture);setOwner(!!u.app_metadata&&u.app_metadata.provider==='github'&&OWNERS.includes(String(md.user_name||'').toLowerCase()));try{sessionStorage.setItem('debuda.session',user)}catch{}
   $('#welcome').classList.add('hidden');$('#app').classList.remove('hidden');renderAcct();toast('Signed in as '+user)}
  catch{toast('Login failed. Try again.')}})();

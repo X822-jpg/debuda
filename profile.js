@@ -13,6 +13,10 @@ const FRAMES=[['Plain Ring','c',499,'#9ca3af'],['Mint Ring','c',599,'linear-grad
 const FONTS=[['Righteous','c',499],['Special Elite','c',599],['Pacifico','r',899],['Audiowide','r',999],['Permanent Marker','r',1199],
 ['Orbitron','e',1499],['Bungee','e',1799],['Press Start 2P','l',2299],['Creepster','l',2699],['Cinzel','m',2999]];
 const PK={t:TITLES,f:FRAMES,n:FONTS},EMOJI=['🌸','🔥','👑','💀','🦊','🐺','🐉','🎯','👾','🌙','⚡','🎭'];
+// Owner accounts: verified GitHub logins that get every shop item unlocked.
+const OWNERS=['x822-jpg','tugalevltv-debug'];
+function setOwner(v){try{v?sessionStorage.setItem('debuda.owner','1'):sessionStorage.removeItem('debuda.owner')}catch{}}
+function isOwner(){try{return !!user&&sessionStorage.getItem('debuda.owner')==='1'}catch{return false}}
 let pvw={t:null,f:null,n:null},shopKind='t';
 
 function pf(){return (store.get('debuda.profiles',{})[user])||{}}
@@ -34,10 +38,10 @@ function pCard(host,p,eq,name){host.replaceChildren();const l=el('div','pl'),r=e
  l.append(avEl(p,96,eq.f),r);host.append(l)}
 
 function buyEquip(k,i){if(!user)return openAuth('login');const p=pf();p.own=p.own||[];p.eq=p.eq||{};
- if(p.own.includes(k+i)){p.eq[k]=p.eq[k]===i?null:i;pfSave(p);renderShop();renderAcct();return}
+ if(isOwner()||p.own.includes(k+i)){p.eq[k]=p.eq[k]===i?null:i;pfSave(p);renderShop();renderAcct();return}
  if(!SALES_OPEN)return toast('Debuda is in Alpha — buying is not open yet.');
  p.own.push(k+i);pfSave(p);renderShop()}
-function shopItem(k,i){const it=PK[k][i],p=pf(),own=(p.own||[]).includes(k+i),on=(p.eq||{})[k]===i,col=RAR[it[1]][1];
+function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).includes(k+i),on=(p.eq||{})[k]===i,col=RAR[it[1]][1];
  const d=el('div','item'),th=el('div','ith'),rb=el('span','rar',RAR[it[1]][0]);d.style.borderColor=col+'66';rb.style.color=col;rb.style.borderColor=col;
  if(k==='t'){const s=el('b','',it[0]);s.style.color=col;th.append(s)}
  else if(k==='f')th.append(avEl(p,64,i));
@@ -51,6 +55,7 @@ function renderShop(){const p=pf(),eq=p.eq||{},o={};for(const k of ['t','f','n']
  $('#shopGrid').replaceChildren(...PK[shopKind].map((_,i)=>shopItem(shopKind,i)))}
 function renderProfile(){const p=pf();pCard($('#profCard'),p,p.eq||{},pname());$('#rnIn').value=pname();
  const box=$('#myItems');box.replaceChildren();const own=p.own||[];
+ if(isOwner())return box.append(el('p','muted','Owner account: all 37 items are unlocked. Equip them in the Shop.'));
  if(!own.length)return box.append(el('p','muted','You own no items yet. Preview them in the Shop — buying opens after Alpha.'));
  for(const id of own){const k=id[0],i=+id.slice(1),it=PK[k]&&PK[k][i];if(!it)continue;const b=el('button','btn ghost sm',(((p.eq||{})[k]===i)?'✓ ':'')+it[0]);b.onclick=()=>buyEquip(k,i);box.append(b)}}
 function setAv(a){const p=pf();p.av=a;pfSave(p);renderProfile();renderAcct()}
