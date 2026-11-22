@@ -81,3 +81,15 @@ main{padding:28px;max-width:1150px}
 .emojis{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.emo{background:#000;border:1px solid var(--line);border-radius:12px;width:44px;height:44px;font-size:22px}.emo:hover{border-color:var(--pu)}
 .up{cursor:pointer;display:inline-block}
 footer .link{color:var(--mu);font-size:12px;letter-spacing:.1em;text-decoration:underline}
+.tabs{flex-wrap:wrap}.ear{position:absolute}.pn,.pt{text-shadow:0 1px 6px #000}
+.swatch{border-radius:10px;min-height:72px}.tsh{text-shadow:0 1px 6px #000}
+.bgan{animation:bgm 9s ease-in-out infinite}@keyframes bgm{50%{background-position:100% 50%}}
+.ia-bounce{animation:ibo 1s ease-in-out infinite}@keyframes ibo{50%{transform:translateY(-12%)}}
+.ia-spin{animation:isp 3s linear infinite}@keyframes isp{to{transform:rotate(360deg)}}
+.ia-pulse{animation:ipu 1.4s ease-in-out infinite}@keyframes ipu{50%{transform:scale(1.18)}}
+.ia-shake{animation:ish .6s ease-in-out infinite}@keyframes ish{25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.ia-float{animation:ifl 3s ease-in-out infinite}@keyframes ifl{50%{transform:translateY(-10%) rotate(4deg)}}
+.ia-flip{animation:ifp 2.4s ease-in-out infinite}@keyframes ifp{50%{transform:rotateY(180deg)}}
+.ia-wiggle{animation:iwg 1.2s ease-in-out infinite}@keyframes iwg{25%{transform:rotate(-8deg) scale(1.05)}75%{transform:rotate(8deg) scale(1.05)}}
+.ia-blink{animation:ibl 2s steps(2) infinite}@keyframes ibl{50%{opacity:.25}}
+.ia-glitch{animation:igl 1.2s steps(6) infinite}@keyframes igl{20%{transform:translate(3%,-3%)}40%{transform:translate(-3%,2%);filter:hue-rotate(90deg)}60%{transform:translate(2%,3%)}80%{transform:translate(-2%,-2%)}}

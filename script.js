@@ -5,7 +5,7 @@ const GAMES=[
 {id:'dahood',name:'Da Hood',cat:'Action',desc:'Roblox: open street world with fights, cash and crews.',emoji:'🏙️',art:'dahood',tag:'SUPPORTED'}];
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
-const DATA_VERSION='2026-11-22-reset2'; // change this text to wipe everyone's saved data again
+const DATA_VERSION='2026-11-23-reset3'; // change this text to wipe everyone's saved data again
 try{if(localStorage.getItem('debuda.v')!==DATA_VERSION){Object.keys(localStorage).filter(k=>k.startsWith('debuda.')&&k!=='debuda.rt').forEach(k=>localStorage.removeItem(k));localStorage.setItem('debuda.v',DATA_VERSION)}}catch{}
 const SALES_OPEN=false; // Alpha: buying is locked. Set to true only when a real checkout exists.
 const ANCHORS=[[1,100],[7,500],[30,1200],[90,1900],[365,2500]]; // [days, cents]: $1 up to $25
