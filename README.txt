@@ -13,3 +13,6 @@ DISCORD / GITHUB LOGIN (via Supabase):
 3. GitHub: github.com/settings/developers > New OAuth App: Homepage = your Vercel link, Callback = the Supabase Callback URL, then copy Client ID + a new Client Secret into Supabase.
 4. Supabase > Authentication > URL Configuration: put your Vercel link in Site URL and Redirect URLs.
 5. Paste SUPABASE_URL and SUPABASE_ANON_KEY into config.js. Never put Client Secrets in the site files.
+
+PROFILE/SHOP: profile.js holds all 15 titles, 12 frames, 10 fonts ($4.99-$30). Profiles are saved in each browser only. Buying stays locked by SALES_OPEN=false in script.js.
+GITHUB LOGIN: enable GitHub in Supabase > Authentication > Providers (Client ID + Secret from github.com/settings/developers).

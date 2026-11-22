@@ -66,3 +66,17 @@ main{padding:28px;max-width:1150px}
 .lock{margin-top:16px;padding:12px 14px;border:1px solid #854d0e;background:#422006;color:#fde68a;border-radius:12px;font-size:13px}
 .btn:disabled{cursor:not-allowed}
 .or{text-align:center;color:var(--mu);font-size:12px;margin:14px 0 0}.g{margin-top:10px}
+#nav{flex-wrap:wrap}.link{background:none;border:0;font-weight:800;padding:0}
+.pv{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:20px;margin:18px 0;background:var(--card);border:1px solid var(--line);border-radius:18px}
+.pl{display:flex;align-items:center;gap:18px}.pn{font-size:26px;line-height:1.2}.pt{font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.av{position:relative;flex:none}.ring,.face{position:absolute;border-radius:50%}.ring{inset:0}.face{inset:5%;background:#0b0a10 center/cover;display:grid;place-items:center}
+.ring.spin{animation:hue 4s linear infinite}@keyframes hue{to{filter:hue-rotate(360deg)}}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:8px;justify-items:start}
+.ith{min-height:70px;display:grid;place-items:center;width:100%;font-size:18px;text-align:center}
+.rar{font-size:11px;font-weight:800;letter-spacing:.1em;border:1px solid;border-radius:99px;padding:2px 10px;text-transform:uppercase}
+.item h4{font-size:14px}.pr{font-family:Unbounded,sans-serif;color:var(--pu);font-size:18px}
+.row2{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn.sm{padding:7px 12px;font-size:13px}.btn[aria-disabled=true]{opacity:.55;cursor:not-allowed;box-shadow:none}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}.panel h3{font-size:15px;margin-bottom:12px}
+.panel input[type=text],#rnIn{background:#000;border:1px solid var(--line);border-radius:10px;padding:10px 13px;min-width:200px}
+.emojis{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.emo{background:#000;border:1px solid var(--line);border-radius:12px;width:44px;height:44px;font-size:22px}.emo:hover{border-color:var(--pu)}
+.up{cursor:pointer;display:inline-block}

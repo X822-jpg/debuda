@@ -7,8 +7,8 @@
 <title>Debuda</title>
 <link rel="icon" type="image/png" href="debudalogo.png"><link rel="apple-touch-icon" href="debudalogo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"><script src="config.js" defer></script><script src="script.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@500;700;800&family=Righteous&family=Special+Elite&family=Pacifico&family=Audiowide&family=Permanent+Marker&family=Orbitron:wght@700&family=Bungee&family=Press+Start+2P&family=Creepster&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="config.js" defer></script><script src="profile.js" defer></script><script src="script.js" defer></script>
 </head>
 <body>
 <aside class="garden" aria-hidden="true">
@@ -45,7 +45,7 @@
 <div class="alphabar">⚠ DEBUDA IS IN ALPHA — buying is not open yet</div>
 <header class="top">
 <a class="brand" href="#" data-go="home"><img src="debudalogo.png" alt="" width="34" height="34"><b>DEBUDA</b></a>
-<nav id="nav"><button class="nav on" data-go="home">Home</button><button class="nav" data-go="games">Supported games</button><button class="nav" data-go="library">Library</button><button class="nav" data-go="roblox">Roblox</button></nav>
+<nav id="nav"><button class="nav on" data-go="home">Home</button><button class="nav" data-go="games">Supported games</button><button class="nav" data-go="library">Library</button><button class="nav" data-go="roblox">Roblox</button><button class="nav" data-go="shop">Shop</button><button class="nav" data-go="profile">Profile</button></nav>
 <input id="search" type="search" placeholder="Search supported games…" maxlength="40" aria-label="Search games" autocomplete="off">
 <div class="acct" id="acct"></div>
 </header>
@@ -63,6 +63,16 @@
 <p class="muted">Works only in Roblox, for MM2, Deagle Duels and Da Hood. Put it in a LocalScript under StarterPlayer › StarterPlayerScripts, then press Play.</p>
 <div class="row"><button class="btn" id="copyLua">Copy script</button><a class="btn ghost dl" href="debuda.lua" download="debuda.lua">Download .lua</a></div>
 <pre class="code" id="luaCode" tabindex="0">Loading…</pre></section>
+<section class="view hidden" id="shopView"><h1 class="t">Debuda <span>shop</span></h1>
+<p class="muted">Titles, avatar frames and name fonts. Rarity goes from Common to Mythic, $4.99 to $30. Use Preview to try them on. Buying opens after Alpha.</p>
+<div class="pv" id="shopPv"></div>
+<div class="tabs" id="shopTabs"><button class="tab on" data-sk="t">Titles (15)</button><button class="tab" data-sk="f">Frames (12)</button><button class="tab" data-sk="n">Fonts (10)</button></div>
+<div class="grid" id="shopGrid"></div></section>
+<section class="view hidden" id="profileView"><h1 class="t">My <span>profile</span></h1>
+<div class="pv" id="profCard"></div>
+<div class="panel"><h3>Account name</h3><div class="row2"><input id="rnIn" maxlength="20" placeholder="New name" autocomplete="off"><button class="btn" id="rnBtn">Rename</button></div></div>
+<div class="panel"><h3>Avatar</h3><div class="row2"><label class="btn ghost up">Upload image<input type="file" id="avFile" accept="image/png,image/jpeg,image/webp" hidden></label><button class="btn ghost" id="avProv">Use Discord/GitHub avatar</button></div><div class="emojis" id="emojis"></div></div>
+<div class="panel"><h3>My items</h3><div class="row2" id="myItems"></div></div></section>
 </main>
 <footer>© 2026 DEBUDA · ALPHA 2.0</footer>
 </div>

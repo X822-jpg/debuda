@@ -21,8 +21,8 @@ function renderCatalog(){const q=$('#search').value.trim().toLowerCase();
  const l=GAMES.filter(g=>(filter==='All'||g.cat===filter)&&(g.name+g.cat+g.desc).toLowerCase().includes(q));
  fill('#catalog',l);$('#none').classList.toggle('hidden',l.length>0)}
 function renderLib(){const l=GAMES.filter(g=>saved.has(g.id));fill('#libGrid',l);$('#libEmpty').classList.toggle('hidden',l.length>0)}
-function go(v){['home','games','library','roblox'].forEach(x=>$('#'+x+'View').classList.toggle('hidden',x!==v));
- $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.go===v));if(v==='games')renderCatalog();if(v==='library')renderLib();if(v==='roblox')loadLua();scrollTo({top:0})}
+function go(v){if(v==='profile'&&!user){openAuth('login');return}['home','games','library','roblox','shop','profile'].forEach(x=>$('#'+x+'View').classList.toggle('hidden',x!==v));
+ $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.go===v));if(v==='games')renderCatalog();if(v==='library')renderLib();if(v==='roblox')loadLua();if(v==='shop')renderShop();if(v==='profile')renderProfile();scrollTo({top:0})}
 function open(id){$('#'+id).classList.remove('hidden');document.body.style.overflow='hidden'}
 function closeAll(){$$('.back').forEach(m=>m.classList.add('hidden'));document.body.style.overflow=''}
 
@@ -48,7 +48,7 @@ function openAuth(m){closeAll();setMode(m||'login');open('authModal');$('#user')
 function renderAcct(){const a=$('#acct');a.replaceChildren();
  if(!user){const l=el('button','btn ghost','Log in'),r=el('button','btn','Register');l.onclick=()=>openAuth('login');r.onclick=()=>openAuth('register');a.append(l,r);return}
  const u=store.get('debuda.users',{})[user],last=u&&u.orders&&u.orders[u.orders.length-1];
- const c=el('div','chip');c.append(el('span','',user));if(last&&new Date(last.ends)>new Date())c.append(el('small','','Alpha ✓'));
+ const c=el('div','chip'),nb=el('button','link',pname());nb.onclick=()=>go('profile');c.append(miniAv(),nb);if(last&&new Date(last.ends)>new Date())c.append(el('small','','Alpha ✓'));
  const o=el('button','','Log out');o.onclick=()=>{user=null;try{sessionStorage.removeItem('debuda.session')}catch{}renderAcct();toast('Logged out.')};c.append(o);a.append(c)}
 $('#authForm').addEventListener('submit',async e=>{e.preventDefault();const err=$('#authErr'),btn=$('#authBtn');err.textContent='';
  const name=$('#user').value.trim().toLowerCase(),pw=$('#pass').value;
@@ -115,6 +115,6 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-oauth]');i
  try{const r=await fetch(CFG.SUPABASE_URL+'/auth/v1/user',{headers:{apikey:CFG.SUPABASE_ANON_KEY,Authorization:'Bearer '+decodeURIComponent(m[1])}});
   if(!r.ok)throw 0;const u=await r.json(),md=u.user_metadata||{};
   const n=md.custom_claims&&md.custom_claims.global_name||md.full_name||md.user_name||u.email;if(!n)throw 0;
-  user=String(n).slice(0,40);try{sessionStorage.setItem('debuda.session',user)}catch{}
+  user=String(n).slice(0,40);adoptAv(md.avatar_url||md.picture);try{sessionStorage.setItem('debuda.session',user)}catch{}
   $('#welcome').classList.add('hidden');$('#app').classList.remove('hidden');renderAcct();toast('Signed in as '+user)}
  catch{toast('Login failed. Try again.')}})();
