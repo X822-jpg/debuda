@@ -18,3 +18,5 @@ PROFILE/SHOP: profile.js holds all 15 titles, 12 frames, 10 fonts ($4.99-$30). P
 GITHUB LOGIN: enable GitHub in Supabase > Authentication > Providers (Client ID + Secret from github.com/settings/developers).
 
 SHOP v2: 250 items (50 titles, 50 frames, 50 fonts, 50 backgrounds, 50 animated icons). Rarities: Common, Rare, Epic, Legendary, Mythic, Exotic, Eternal, Secret, OG. Prices $4.99 to $80.00. Fonts come from Google Fonts (5 stylesheet links in index.html).
+
+CASES: 12 cases (10 made from shop items + 2 Xmas cases with exclusive items). Odds are shown in each case. Opening is a free demo while SALES_OPEN=false.

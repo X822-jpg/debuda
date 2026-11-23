@@ -93,3 +93,8 @@ footer .link{color:var(--mu);font-size:12px;letter-spacing:.1em;text-decoration:
 .ia-wiggle{animation:iwg 1.2s ease-in-out infinite}@keyframes iwg{25%{transform:rotate(-8deg) scale(1.05)}75%{transform:rotate(8deg) scale(1.05)}}
 .ia-blink{animation:ibl 2s steps(2) infinite}@keyframes ibl{50%{opacity:.25}}
 .ia-glitch{animation:igl 1.2s steps(6) infinite}@keyframes igl{20%{transform:translate(3%,-3%)}40%{transform:translate(-3%,2%);filter:hue-rotate(90deg)}60%{transform:translate(2%,3%)}80%{transform:translate(-2%,-2%)}}
+.cemo{font-size:52px}.orow{display:flex;justify-content:space-between;gap:12px;padding:4px 0;border-bottom:1px solid var(--line);font-size:13px}
+.reel{min-height:120px;display:grid;place-items:center;gap:6px;margin:14px 0;border:2px dashed var(--line);border-radius:14px;padding:10px;text-align:center}.reel.win{animation:pop .35s;border-style:solid}
+.chips2{display:flex;flex-wrap:wrap;gap:6px;max-height:170px;overflow:auto;margin:8px 0 12px}.chips2 button{background:#000;border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12px}
+.cm h4{margin:14px 0 6px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+.xsnow{animation:xsnow 6s linear infinite}@keyframes xsnow{0%{background-position:0 0,0 0,center bottom}100%{background-position:35px 70px,-50px 100px,center bottom}}

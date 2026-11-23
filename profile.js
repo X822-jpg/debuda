@@ -179,6 +179,64 @@ const PK={t:TITLES,f:FRAMES,n:FONTS,b:BGS,i:ICONS},EMOJI=['🌸','🔥','👑','
 const OWNERS=['x822-jpg','tugalevltv-debug'];
 function setOwner(v){try{v?sessionStorage.setItem('debuda.owner','1'):sessionStorage.removeItem('debuda.owner')}catch{}}
 function isOwner(){try{return !!user&&sessionStorage.getItem('debuda.owner')==='1'}catch{return false}}
+// ---- Cases: 10 cases made of the 250 shop items + 2 Xmas cases with exclusive items (case-only, index >= BASE) ----
+const BASE=50,SEC={t:'Title',f:'Frame',n:'Font',b:'Background',i:'Icon'},ORD=Object.keys(RAR);
+const RW={c:40,r:28,e:14,l:8,m:5,x:2.5,t:1.5,s:.7,o:.3}; // drop weights per rarity (shown to the player as odds)
+function frObj(ring,ear){const tk=ring.split(' '),ty=tk[0],cs=tk.slice(1);return {bg:ty[0]==='s'?cs[0]:ty[0]==='l'?'linear-gradient(135deg,'+cs+')':'conic-gradient('+cs.concat(cs[0])+')',glow:ty.includes('*')?cs[0]:'',spin:ty.includes('!'),ear:ear?ear.split(' '):null}}
+function bgObj(sp){const tk=sp.split(' '),ty=tk[0],cs=tk.slice(1);return {bg:ty==='l'?'linear-gradient(135deg,'+cs+')':'linear-gradient(120deg,'+cs+')',an:ty==='a'}}
+function applyBg(n,o){n.style.background=o?o.bg:'';n.style.backgroundSize=o?(o.size!==undefined?o.size:(o.an?'300% 300%':'')):'';n.style.backgroundPosition=o&&o.pos||'';n.classList.remove('bgan','xsnow');const c=o&&(o.cls||(o.an?'bgan':''));if(c)n.classList.add(c)}
+function winterSvg(){let b='',w='';[[0,50,110],[44,36,150],[78,56,95],[130,40,135],[168,60,105],[225,44,160],[266,52,100]].forEach(([x,bw,h],n)=>{const y=225-h;
+ b+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="#0f1a3a"/><rect x="${x}" y="${y-3}" width="${bw}" height="4" fill="#f1f5f9"/>`;
+ for(let r=0;r<Math.floor(h/16);r++)for(let c=0;c<Math.floor(bw/12);c++)if((r*7+c*3+n*5)%4<2)w+=`<rect x="${x+5+c*12}" y="${y+10+r*16}" width="6" height="8" fill="#fde68a"/>`});
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050816"/><stop offset=".7" stop-color="#312e81"/><stop offset="1" stop-color="#be185d"/></linearGradient></defs><rect width="400" height="240" fill="url(#s)"/><circle cx="330" cy="40" r="32" fill="#fef9c3" opacity=".15"/><circle cx="330" cy="40" r="20" fill="#fef9c3"/>${b}${w}<rect y="218" width="400" height="22" fill="#f8fafc"/><ellipse cx="90" cy="222" rx="120" ry="9" fill="#e2e8f0"/><g transform="translate(322 150)"><circle cy="62" r="22" fill="#fff"/><circle cy="30" r="16" fill="#fff"/><circle cy="6" r="11" fill="#fff"/><rect x="-9" y="-16" width="18" height="12" fill="#111"/><rect x="-14" y="-6" width="28" height="3" fill="#111"/><path d="M0 6l16 3-16 3z" fill="#f97316"/><circle cx="-4" cy="3" r="1.6" fill="#111"/><circle cx="4" cy="3" r="1.6" fill="#111"/><rect x="-11" y="14" width="22" height="5" fill="#dc2626"/><circle cy="28" r="2" fill="#111"/><circle cy="38" r="2" fill="#111"/><path d="M-16 30l-22-10M16 30l22-10" stroke="#78350f" stroke-width="3"/></g></svg>`}
+const SNOW='radial-gradient(2px 2px at 15px 20px,#fff 60%,#0000),radial-gradient(1.5px 1.5px at 45px 50px,#fff 60%,#0000)';
+const WINTER={bg:SNOW+',url("data:image/svg+xml,'+encodeURIComponent(winterSvg())+'")',size:'70px 70px,100px 100px,cover',pos:'0 0,0 0,center bottom',cls:'xsnow'};
+const AURORA={bg:SNOW+',linear-gradient(180deg,#022c22,#0e7490 55%,#312e81)',size:'70px 70px,100px 100px,auto',pos:'0 0,0 0,center bottom',cls:'xsnow'};
+function reg(list){return list.map(([k,r,n,a,b])=>{const it=k==='f'?[n,r,0,frObj(a,b)]:k==='b'?[n,r,0,typeof a==='string'?bgObj(a):a]:k==='i'?[n,r,0,a,b]:[n,r,0];PK[k].push(it);return [k,PK[k].length-1]})}
+const X1=reg([['t','c',"Santa's Helper"],['f','c','Candy Cane Ring','c! #ef4444 #ffffff'],['i','c','Gift Drop','🎁','bounce'],
+ ['t','r','Naughty List'],['i','r','Snowflake Spin','❄️','spin'],['b','r','Snowy Night','l #0b1026 #1e3a8a #e0f2fe'],
+ ['f','e','Reindeer Ears','l* #b45309 #78350f','fox #92400e'],['i','e','Dancing Snowman','⛄','wiggle'],
+ ['n','l','Mountains of Christmas'],['b','l','Frosted Window','a #0c4a6e #e0f2fe #7dd3fc #0c4a6e'],['b','s','Winter City',WINTER]]);
+const X2=reg([['t','c','Last Minute Shopper'],['f','c','Mistletoe Ring','l #86efac #dc2626'],['i','c','Cookie Spin','🍪','spin'],
+ ['t','r','Eggnog Enjoyer'],['i','r','Stocking Swing','🧦','shake'],['b','r','Gingerbread Lane','l #7c2d12 #fde68a'],
+ ['f','e','Elf Ears','l* #4ade80 #166534','fox #16a34a'],['i','e','Rudolph Glow','🦌','pulse'],
+ ['n','l','Emilys Candy'],['b','l','Candy Cane Swirl','a #ef4444 #ffffff #ef4444 #ffffff'],['b','s','Aurora Night',AURORA]]);
+const ALL=k=>PK[k].slice(0,BASE).map((_,i)=>[k,i]),ALLP=[].concat(...['t','f','n','b','i'].map(ALL)),byR=(refs,rs)=>refs.filter(([k,i])=>rs.includes(PK[k][i][1]));
+const CASES=[
+ {id:'starter',name:'Starter Case',price:499,em:'📦',pool:byR(ALLP,'cr')},
+ {id:'titles',name:'Titles Case',price:999,em:'🏷️',pool:ALL('t')},
+ {id:'fonts',name:'Fonts Case',price:999,em:'🔤',pool:ALL('n')},
+ {id:'ears',name:'Ears Case',price:999,em:'🐱',pool:ALL('f').filter(([k,i])=>PK.f[i][3].ear)},
+ {id:'frames',name:'Frames Case',price:1499,em:'🖼️',pool:ALL('f')},
+ {id:'icons',name:'Animated Icons Case',price:1499,em:'🎭',pool:ALL('i')},
+ {id:'bgs',name:'Backgrounds Case',price:1499,em:'🌆',pool:ALL('b')},
+ {id:'epic',name:'Epic Case',price:2499,em:'💜',pool:byR(ALLP,'elm')},
+ {id:'legend',name:'Legend Case',price:3999,em:'👑',pool:byR(ALLP,'lmxt')},
+ {id:'og',name:'OG Case',price:8000,em:'🏆',pool:byR(ALLP,'mxtso')},
+ {id:'xmas1',name:'Xmas Case: Winter City',price:1999,em:'🎄',pool:X1,xmas:1},
+ {id:'xmas2',name:'Xmas Case: Holiday Magic',price:1999,em:'🎅',pool:X2,xmas:1}];
+function odds(c){const m={};for(const [k,i] of c.pool){const r=PK[k][i][1];m[r]=(m[r]||0)+1}const sum=Object.keys(m).reduce((a,r)=>a+RW[r],0);return Object.keys(m).sort((a,b)=>RW[b]-RW[a]).map(r=>({r,n:m[r],pct:RW[r]/sum*100}))}
+function rnd(){return crypto.getRandomValues(new Uint32Array(1))[0]/4294967296}
+function roll(c){const o=odds(c);let x=rnd()*100,r=o[o.length-1].r;for(const q of o){if(x<q.pct){r=q.r;break}x-=q.pct}const g=c.pool.filter(([k,i])=>PK[k][i][1]===r);return g[Math.floor(rnd()*g.length)]}
+function thumbOf(k,i){const it=PK[k][i],p=pf(),th=el('div','ith'),col=RAR[it[1]][1];
+ if(k==='t'){const s=el('b','',it[0]);s.style.color=col;th.append(s)}else if(k==='f')th.append(avEl(p,56,i));
+ else if(k==='n'){const s=el('b','',user?pname():'Your name');s.style.fontFamily=fam(it[0]);th.append(s)}
+ else if(k==='b'){applyBg(th,it[3]);th.classList.add('swatch');th.append(el('b','tsh',user?pname():'Preview'))}else th.append(avEl(p,56,null,i));return th}
+function caseCard(c){const d=el('div','item'),th=el('div','ith cemo',c.em),top=odds(c).pop(),b1=el('button','btn ghost sm','Contents & odds'),b2=el('button','btn sm',SALES_OPEN?'Buy':'🔒 Alpha'),r=el('div','row2'),
+ tag=el('span','rar',c.xmas?'Limited · Xmas':c.pool.length+' items');tag.style.color=c.xmas?'#fb7185':'#9ca3af';tag.style.borderColor=tag.style.color;if(c.xmas)d.style.borderColor='#fb718566';
+ b1.onclick=()=>openCase(c);b2.onclick=()=>toast(SALES_OPEN?'Case checkout is not built yet.':'Debuda is in Alpha — buying is not open yet.');if(!SALES_OPEN)b2.setAttribute('aria-disabled','true');
+ r.append(b1,b2);d.append(th,tag,el('h4','',c.name),el('div','muted','Top drop: '+RAR[top.r][0]),el('div','pr',eur(c.price)),r);return d}
+let cmCase=null,cmSel=null,cmBusy=false;
+function cmRender(){liveCard($('#cmPv'));const a=$('#cmAct');a.replaceChildren();if(!cmSel)return;const [k,i]=cmSel,it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).includes(k+i),on=(p.eq||{})[k]===i;
+ const b=el('button','btn sm',own?(on?'Unequip ':'Equip ')+it[0]:'🔒 '+it[0]+' (not owned)');if(!own)b.setAttribute('aria-disabled','true');b.onclick=()=>own?(buyEquip(k,i),cmRender()):toast('You do not own this item yet.');a.append(b)}
+function openCase(c){closeAll();cmCase=c;cmSel=null;pvw=noPv();$('#cmTitle').textContent=c.name;$('#cmKick').textContent=c.xmas?'LIMITED XMAS CASE · '+eur(c.price):'CASE · '+eur(c.price);
+ $('#cmReel').classList.remove('win');$('#cmReel').replaceChildren(el('span','muted','Press "Test open" for a free demo roll.'));
+ $('#cmOdds').replaceChildren(...odds(c).map(q=>{const d=el('div','orow'),s=el('b','',RAR[q.r][0]);s.style.color=RAR[q.r][1];d.append(s,el('span','muted',q.n+' items'),el('span','',q.pct.toFixed(2)+'%'));return d}));
+ $('#cmItems').replaceChildren(...c.pool.slice().sort((a,b)=>ORD.indexOf(PK[b[0]][b[1]][1])-ORD.indexOf(PK[a[0]][a[1]][1])).map(([k,i])=>{const it=PK[k][i],b=el('button','',it[0]);b.title=SEC[k]+' · '+RAR[it[1]][0];b.style.color=RAR[it[1]][1];b.style.borderColor=RAR[it[1]][1]+'88';b.onclick=()=>{pvw[k]=i;cmSel=[k,i];cmRender()};return b}));
+ open('caseModal');cmRender()}
+function demoOpen(){if(cmBusy||!cmCase)return;cmBusy=true;const c=cmCase,reel=$('#cmReel'),res=roll(c);let n=0;reel.classList.remove('win');
+ const tick=()=>{const [k,i]=n<24?c.pool[Math.floor(rnd()*c.pool.length)]:res,it=PK[k][i];reel.replaceChildren(thumbOf(k,i),el('b','',it[0]));reel.style.borderColor=RAR[it[1]][1];
+  if(++n<=24)setTimeout(tick,40+n*8);else{reel.append(el('div','muted','You got a '+RAR[it[1]][0]+' '+SEC[k]+'! (demo, not saved)'));reel.classList.add('win');pvw[k]=i;cmSel=[k,i];cmRender();cmBusy=false}};tick()}
 let pvw={t:null,f:null,n:null,b:null,i:null},shopKind='t';
 const noPv=()=>({t:null,f:null,n:null,b:null,i:null});
 
@@ -211,7 +269,7 @@ function avEl(p,size,fr,ic){const w=el('div','av'),f=FRAMES[fr],I=ICONS[ic],ring
  w.append(ring,face);return w}
 function miniAv(){const q=pf().eq||{};return avEl(pf(),26,q.f,q.i)}
 function pCard(host,p,eq,name){host.replaceChildren();const l=el('div','pl'),r=el('div'),n=el('div','pn',name),B=BGS[eq.b];
- host.style.background=B?B[3].bg:'';host.style.backgroundSize=B&&B[3].an?'300% 300%':'';host.classList.toggle('bgan',!!(B&&B[3].an));
+ applyBg(host,B&&B[3]);
  if(FONTS[eq.n])n.style.fontFamily=fam(FONTS[eq.n][0]);r.append(n);
  const T=TITLES[eq.t];if(T){const t=el('div','pt',T[0]);t.style.color=RAR[T[1]][1];r.append(t)}
  l.append(avEl(p,96,eq.f,eq.i),r);host.append(l)}
@@ -225,16 +283,16 @@ function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).inclu
  if(k==='t'){const s=el('b','',it[0]);s.style.color=col;th.append(s)}
  else if(k==='f')th.append(avEl(p,56,i));
  else if(k==='n'){const s=el('b','',user?pname():'Your name');s.style.fontFamily=fam(it[0]);th.append(s)}
- else if(k==='b'){th.style.background=it[3].bg;th.style.backgroundSize=it[3].an?'300% 300%':'';th.classList.toggle('bgan',!!it[3].an);th.classList.add('swatch');th.append(el('b','tsh',user?pname():'Preview'))}
+ else if(k==='b'){applyBg(th,it[3]);th.classList.add('swatch');th.append(el('b','tsh',user?pname():'Preview'))}
  else th.append(avEl(p,56,null,i));
  const b1=el('button','btn ghost sm',pvw[k]===i?'Previewing':'Preview'),b2=el('button','btn sm',own?(on?'Unequip':'Equip'):(SALES_OPEN?'Buy':'🔒 Alpha'));
  b1.onclick=()=>{pvw[k]=pvw[k]===i?null:i;renderShop()};b2.onclick=()=>buyEquip(k,i);if(!own&&!SALES_OPEN)b2.setAttribute('aria-disabled','true');
  const r=el('div','row2');r.append(b1,b2);d.append(th,rb,el('h4','',it[0]),el('div','pr',eur(it[2])),r);return d}
+function liveCard(host){const p=pf(),eq=p.eq||{},o={};for(const k of 'tfnbi')o[k]=pvw[k]!==null?pvw[k]:eq[k];pCard(host,p,o,user?pname():'Your name');
+ if(Object.values(pvw).some(v=>v!==null)){const b=el('button','btn ghost sm','Reset preview');b.onclick=()=>{pvw=noPv();cmSel=null;shopKind==='c'&&cmCase&&!$('#caseModal').classList.contains('hidden')?cmRender():renderShop()};host.append(b)}}
 function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked.':'Owner accounts: log in with GitHub in this browser to unlock everything.';
- const p=pf(),eq=p.eq||{},o={};for(const k of 'tfnbi')o[k]=pvw[k]!==null?pvw[k]:eq[k];
- pCard($('#shopPv'),p,o,user?pname():'Your name');
- if(Object.values(pvw).some(v=>v!==null)){const b=el('button','btn ghost sm','Reset preview');b.onclick=()=>{pvw=noPv();renderShop()};$('#shopPv').append(b)}
- $('#shopGrid').replaceChildren(...PK[shopKind].map((_,i)=>shopItem(shopKind,i)))}
+ liveCard($('#shopPv'));
+ $('#shopGrid').replaceChildren(...(shopKind==='c'?CASES.map(caseCard):PK[shopKind].slice(0,BASE).map((_,i)=>shopItem(shopKind,i))))}
 function renderProfile(){const p=pf();pCard($('#profCard'),p,p.eq||{},pname());$('#rnIn').value=pname();
  const box=$('#myItems');box.replaceChildren();const own=p.own||[];
  if(isOwner())return box.append(el('p','muted','Owner account: all '+Object.values(PK).reduce((a,b)=>a+b.length,0)+' items are unlocked. Equip them in the Shop.'));
@@ -244,6 +302,7 @@ function setAv(a){const p=pf();p.av=a;pfSave(p);renderProfile();renderAcct()}
 
 function pfInit(){
  $('#resetBtn').onclick=()=>{if(!confirm('Reset ALL saved Debuda data in this browser (account, profile, items, login)?'))return;try{Object.keys(localStorage).filter(k=>k.startsWith('debuda.')&&k!=='debuda.v').forEach(k=>localStorage.removeItem(k));sessionStorage.clear()}catch{}location.href=location.pathname};
+ $('#cmOpen').onclick=demoOpen;$('#cmBuy').onclick=()=>toast('Debuda is in Alpha — buying is not open yet.');
  $('#shopTabs').addEventListener('click',e=>{const b=e.target.closest('[data-sk]');if(!b)return;shopKind=b.dataset.sk;$$('[data-sk]').forEach(x=>x.classList.toggle('on',x===b));renderShop()});
  $('#rnBtn').onclick=()=>{const v=$('#rnIn').value.trim();if(!user)return;
   if(!/^[\p{L}\p{N} _.\-]{3,20}$/u.test(v))return toast('Name: 3–20 letters, numbers, space, _ . -');

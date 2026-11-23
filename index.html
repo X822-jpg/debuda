@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="debudalogo.png"><link rel="apple-touch-icon" href="debudalogo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&family=Comfortaa&family=Fredoka&family=Baloo+2&family=Quicksand&family=Rubik&family=Lobster&family=Righteous&family=Chewy&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Audiowide&family=Permanent+Marker&family=Bangers&family=Special+Elite&family=Caveat&family=Kaushan+Script&family=Satisfy&family=Russo+One&family=Black+Ops+One&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Bungee&family=Monoton&family=Rubik+Glitch&family=Faster+One&family=Fascinate&family=Bungee+Shade&family=Gloria+Hallelujah&family=Press+Start+2P&family=Creepster&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Nosifer&family=Eater&family=Metal+Mania&family=Butcherman&family=Pirata+One&family=Cinzel&family=Cinzel+Decorative&family=Michroma&family=Megrim&family=Great+Vibes&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Syncopate&family=Plaster&family=Rampart+One&family=Zen+Dots&family=Playfair+Display&family=Cormorant+Garamond&family=Bungee+Inline&family=VT323&family=Silkscreen&family=Bungee+Outline&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"><script src="config.js" defer></script><script src="profile.js" defer></script><script src="script.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="config.js" defer></script><script src="profile.js" defer></script><script src="script.js" defer></script>
 </head>
 <body>
 <aside class="garden" aria-hidden="true">
@@ -66,7 +66,7 @@
 <section class="view hidden" id="shopView"><h1 class="t">Debuda <span>shop</span></h1>
 <p class="muted">Titles, avatar frames and name fonts. Rarity goes from Common to OG (Common, Rare, Epic, Legendary, Mythic, Exotic, Eternal, Secret, OG), $4.99 to $80. Use Preview to try them on. Buying opens after Alpha.</p>
 <div class="pv" id="shopPv"></div><p class="note" id="shopHint"></p>
-<div class="tabs" id="shopTabs"><button class="tab on" data-sk="t">Titles (50)</button><button class="tab" data-sk="f">Frames (50)</button><button class="tab" data-sk="n">Fonts (50)</button><button class="tab" data-sk="b">Backgrounds (50)</button><button class="tab" data-sk="i">Animated icons (50)</button></div>
+<div class="tabs" id="shopTabs"><button class="tab on" data-sk="t">Titles (50)</button><button class="tab" data-sk="f">Frames (50)</button><button class="tab" data-sk="n">Fonts (50)</button><button class="tab" data-sk="b">Backgrounds (50)</button><button class="tab" data-sk="i">Animated icons (50)</button><button class="tab" data-sk="c">Cases (12)</button></div>
 <div class="grid" id="shopGrid"></div></section>
 <section class="view hidden" id="profileView"><h1 class="t">My <span>profile</span></h1>
 <div class="pv" id="profCard"></div>
@@ -99,5 +99,13 @@
 <button class="btn full" id="authBtn" type="submit">Log in</button>
 <p class="or">or</p><button class="btn ghost full g" type="button" data-oauth="discord">Continue with Discord</button><button class="btn ghost full g" type="button" data-oauth="github">Continue with GitHub</button></form>
 <p class="note">Passwords are hashed in your browser (PBKDF2) and never stored as plain text.</p></section></div>
+<div class="back hidden" id="caseModal"><section class="modal wide cm" role="dialog" aria-modal="true" aria-labelledby="cmTitle"><button class="x" data-close aria-label="Close">×</button>
+<p class="kicker" id="cmKick">CASE</p><h2 id="cmTitle"></h2>
+<div class="pv" id="cmPv"></div><div class="row2" id="cmAct"></div>
+<div class="reel" id="cmReel"></div>
+<div class="row2"><button class="btn" id="cmOpen">Test open (demo)</button><button class="btn ghost" id="cmBuy" aria-disabled="true">🔒 Alpha</button></div>
+<h4>Drop chances</h4><div id="cmOdds"></div>
+<h4>Items in this case (tap to preview)</h4><div class="chips2" id="cmItems"></div>
+<p class="note">Demo only: nothing is saved and no money is charged. Drop chances are shown above.</p></section></div>
 <div class="toast" id="toast" role="status"></div>
 </body></html>
