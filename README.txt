@@ -20,3 +20,9 @@ GITHUB LOGIN: enable GitHub in Supabase > Authentication > Providers (Client ID 
 SHOP v2: 250 items (50 titles, 50 frames, 50 fonts, 50 backgrounds, 50 animated icons). Rarities: Common, Rare, Epic, Legendary, Mythic, Exotic, Eternal, Secret, OG. Prices $4.99 to $80.00. Fonts come from Google Fonts (5 stylesheet links in index.html).
 
 CASES: 12 cases (10 made from shop items + 2 Xmas cases with exclusive items). Odds are shown in each case. Opening is a free demo while SALES_OPEN=false.
+
+ADMIN PANEL + LIVE EVENTS (needs one SQL step):
+1. Log in to the site once with each owner GitHub account (X822-jpg, tugalevltv-debug).
+2. Supabase > SQL Editor > New query > paste supabase-setup.sql > Run.
+3. Log in as an owner: an OPEN button appears next to your name. Say / unlock animation / Christmas event / ban live there.
+Test mode is locked ON: animations only, nothing is unlocked. Bans only block Discord/GitHub logins (the site has no server).

@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="debudalogo.png"><link rel="apple-touch-icon" href="debudalogo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Unbounded:wght@500;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&family=Comfortaa&family=Fredoka&family=Baloo+2&family=Quicksand&family=Rubik&family=Lobster&family=Righteous&family=Chewy&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Audiowide&family=Permanent+Marker&family=Bangers&family=Special+Elite&family=Caveat&family=Kaushan+Script&family=Satisfy&family=Russo+One&family=Black+Ops+One&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Bungee&family=Monoton&family=Rubik+Glitch&family=Faster+One&family=Fascinate&family=Bungee+Shade&family=Gloria+Hallelujah&family=Press+Start+2P&family=Creepster&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Nosifer&family=Eater&family=Metal+Mania&family=Butcherman&family=Pirata+One&family=Cinzel&family=Cinzel+Decorative&family=Michroma&family=Megrim&family=Great+Vibes&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Syncopate&family=Plaster&family=Rampart+One&family=Zen+Dots&family=Playfair+Display&family=Cormorant+Garamond&family=Bungee+Inline&family=VT323&family=Silkscreen&family=Bungee+Outline&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="config.js" defer></script><script src="profile.js" defer></script><script src="script.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Emilys+Candy&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="config.js" defer></script><script src="profile.js" defer></script><script src="admin.js" defer></script><script src="script.js" defer></script>
 </head>
 <body>
 <aside class="garden" aria-hidden="true">
@@ -107,5 +107,13 @@
 <h4>Drop chances</h4><div id="cmOdds"></div>
 <h4>Items in this case (tap to preview)</h4><div class="chips2" id="cmItems"></div>
 <p class="note">Demo only: nothing is saved and no money is charged. Drop chances are shown above.</p></section></div>
+<div class="back hidden" id="adminModal"><section class="modal wide" role="dialog" aria-modal="true" aria-labelledby="admT"><button class="x" data-close aria-label="Close">×</button>
+<p class="kicker">ADMIN PANEL</p><h2 id="admT">Control room</h2><p class="note" id="admStatus"></p>
+<div class="panel"><label class="tg"><input type="checkbox" id="tgTest" checked disabled><b>Test mode (locked on in Alpha)</b><small>Animations only. Nothing is unlocked, the script does nothing, the shop and buying stay as they are.</small></label>
+<label class="tg"><input type="checkbox" id="tgAll" checked><b>Broadcast to everyone</b><small>On: every visitor sees it live. Off: only you see it.</small></label></div>
+<div class="panel"><h3>Say</h3><div class="row2"><input id="admSay" maxlength="140" placeholder="Message everyone will see…" autocomplete="off"><button class="btn" id="admSayBtn">Send</button></div></div>
+<div class="panel"><h3>Events</h3><div class="row2"><button class="btn" id="admUnlock">▶ Start unlock animation</button><button class="btn" id="admXmas">🎄 Start Christmas event</button></div></div>
+<div class="panel"><h3>Ban</h3><div class="row2"><select id="banProv"><option>github</option><option>discord</option></select><input id="banName" maxlength="40" placeholder="username" autocomplete="off"><button class="btn" id="banBtn">Ban</button></div><div class="row2" id="banList"></div></div>
+</section></div>
 <div class="toast" id="toast" role="status"></div>
 </body></html>

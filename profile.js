@@ -215,6 +215,8 @@ const CASES=[
  {id:'og',name:'OG Case',price:8000,em:'🏆',pool:byR(ALLP,'mxtso')},
  {id:'xmas1',name:'Xmas Case: Winter City',price:1999,em:'🎄',pool:X1,xmas:1},
  {id:'xmas2',name:'Xmas Case: Holiday Magic',price:1999,em:'🎅',pool:X2,xmas:1}];
+const XC={};[CASES[10],CASES[11]].forEach(c=>c.pool.forEach(([k,i])=>XC[k+i]=c));
+const TABN={t:'Titles',f:'Frames',n:'Fonts',b:'Backgrounds',i:'Animated icons'};
 function odds(c){const m={};for(const [k,i] of c.pool){const r=PK[k][i][1];m[r]=(m[r]||0)+1}const sum=Object.keys(m).reduce((a,r)=>a+RW[r],0);return Object.keys(m).sort((a,b)=>RW[b]-RW[a]).map(r=>({r,n:m[r],pct:RW[r]/sum*100}))}
 function rnd(){return crypto.getRandomValues(new Uint32Array(1))[0]/4294967296}
 function roll(c){const o=odds(c);let x=rnd()*100,r=o[o.length-1].r;for(const q of o){if(x<q.pct){r=q.r;break}x-=q.pct}const g=c.pool.filter(([k,i])=>PK[k][i][1]===r);return g[Math.floor(rnd()*g.length)]}
@@ -275,7 +277,8 @@ function pCard(host,p,eq,name){host.replaceChildren();const l=el('div','pl'),r=e
  l.append(avEl(p,96,eq.f,eq.i),r);host.append(l)}
 
 function buyEquip(k,i){if(!user)return openAuth('login');const p=pf();p.own=p.own||[];p.eq=p.eq||{};
- if(isOwner()||p.own.includes(k+i)){p.eq[k]=p.eq[k]===i?null:i;pfSave(p);renderShop();renderAcct();return}
+ if(isOwner()||p.own.includes(k+i)){p.eq[k]=p.eq[k]===i?null:i;pfSave(p);renderShop();renderAcct();toast((p.eq[k]===i?'Equipped ':'Unequipped ')+PK[k][i][0]);return}
+ if(i>=BASE)return toast('Collectible: only from the Christmas Case 2026.');
  if(!SALES_OPEN)return toast('Debuda is in Alpha — buying is not open yet.');
  p.own.push(k+i);pfSave(p);renderShop()}
 function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).includes(k+i),on=(p.eq||{})[k]===i,col=RAR[it[1]][1];
@@ -285,14 +288,15 @@ function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).inclu
  else if(k==='n'){const s=el('b','',user?pname():'Your name');s.style.fontFamily=fam(it[0]);th.append(s)}
  else if(k==='b'){applyBg(th,it[3]);th.classList.add('swatch');th.append(el('b','tsh',user?pname():'Preview'))}
  else th.append(avEl(p,56,null,i));
- const b1=el('button','btn ghost sm',pvw[k]===i?'Previewing':'Preview'),b2=el('button','btn sm',own?(on?'Unequip':'Equip'):(SALES_OPEN?'Buy':'🔒 Alpha'));
- b1.onclick=()=>{pvw[k]=pvw[k]===i?null:i;renderShop()};b2.onclick=()=>buyEquip(k,i);if(!own&&!SALES_OPEN)b2.setAttribute('aria-disabled','true');
- const r=el('div','row2');r.append(b1,b2);d.append(th,rb,el('h4','',it[0]),el('div','pr',i>=BASE?'Case exclusive':eur(it[2])),r);return d}
+ const b1=el('button','btn ghost sm',pvw[k]===i?'Previewing':'Preview'),b2=el('button','btn sm',own?(on?'Unequip':'Equip'):(i>=BASE?'🔒 Case only':SALES_OPEN?'Buy':'🔒 Alpha'));
+ b1.onclick=()=>{pvw[k]=pvw[k]===i?null:i;renderShop()};b2.onclick=()=>buyEquip(k,i);if(!own&&(!SALES_OPEN||i>=BASE))b2.setAttribute('aria-disabled','true');
+ const r=el('div','row2');r.append(b1,b2);d.append(th,rb,el('h4','',it[0]));const cc=XC[k+i];if(cc){d.append(el('div','muted evt','Collectible — only in Christmas Case 2026'));const lk=el('button','link evl','(Christmas Event 2026)');lk.onclick=()=>openCase(cc);d.append(lk)}
+ d.append(el('div','pr',XC[k+i]?'Collectible':eur(it[2])),r);return d}
 function liveCard(host){const p=pf(),eq=p.eq||{},o={};for(const k of 'tfnbi')o[k]=pvw[k]!==null?pvw[k]:eq[k];pCard(host,p,o,user?pname():'Your name');
  if(Object.values(pvw).some(v=>v!==null)){const b=el('button','btn ghost sm','Reset preview');b.onclick=()=>{pvw=noPv();cmSel=null;shopKind==='c'&&cmCase&&!$('#caseModal').classList.contains('hidden')?cmRender():renderShop()};host.append(b)}}
 function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked, including all case and Xmas items.':'Owner accounts: log in with GitHub in this browser to unlock everything.';
- liveCard($('#shopPv'));
- $('#shopGrid').replaceChildren(...(shopKind==='c'?CASES.map(caseCard):PK[shopKind].map((_,i)=>i).filter(i=>i<BASE||isOwner()).map(i=>shopItem(shopKind,i))))}
+ liveCard($('#shopPv'));$$('[data-sk]').forEach(b=>{if(TABN[b.dataset.sk])b.textContent=TABN[b.dataset.sk]+' ('+PK[b.dataset.sk].length+')'});
+ $('#shopGrid').replaceChildren(...(shopKind==='c'?CASES.map(caseCard):PK[shopKind].map((_,i)=>shopItem(shopKind,i))))}
 function renderProfile(){const p=pf();pCard($('#profCard'),p,p.eq||{},pname());$('#rnIn').value=pname();
  const box=$('#myItems');box.replaceChildren();const own=p.own||[];
  if(isOwner())return box.append(el('p','muted','Owner account: all '+Object.values(PK).reduce((a,b)=>a+b.length,0)+' items are unlocked, including every case and Xmas item. Equip them in the Shop (case items are listed at the end of each tab).'));

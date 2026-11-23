@@ -50,8 +50,8 @@ function openAuth(m){closeAll();setMode(m||'login');open('authModal');$('#user')
 function renderAcct(){const a=$('#acct');a.replaceChildren();
  if(!user){const l=el('button','btn ghost','Log in'),r=el('button','btn','Register');l.onclick=()=>openAuth('login');r.onclick=()=>openAuth('register');a.append(l,r);return}
  const u=store.get('debuda.users',{})[user],last=u&&u.orders&&u.orders[u.orders.length-1];
- const c=el('div','chip'),nb=el('button','link',pname());nb.onclick=()=>go('profile');c.append(miniAv(),nb);if(isOwner())c.append(el('small','','👑 Owner'));if(last&&new Date(last.ends)>new Date())c.append(el('small','','Alpha ✓'));
- const o=el('button','','Log out');o.onclick=()=>{user=null;setOwner(false);try{localStorage.removeItem('debuda.rt')}catch{}try{sessionStorage.removeItem('debuda.session')}catch{}renderAcct();toast('Logged out.')};c.append(o);a.append(c)}
+ const c=el('div','chip'),nb=el('button','link',pname());nb.onclick=()=>go('profile');c.append(miniAv(),nb);if(isOwner()){c.append(el('small','','👑 Owner'));const ab=el('button','adm','OPEN');ab.onclick=openAdmin;c.append(ab)}if(last&&new Date(last.ends)>new Date())c.append(el('small','','Alpha ✓'));
+ const o=el('button','','Log out');o.onclick=()=>{user=null;setOwner(false);tokSet('',0);try{localStorage.removeItem('debuda.rt')}catch{}try{sessionStorage.removeItem('debuda.session')}catch{}renderAcct();toast('Logged out.')};c.append(o);a.append(c)}
 $('#authForm').addEventListener('submit',async e=>{e.preventDefault();const err=$('#authErr'),btn=$('#authBtn');err.textContent='';
  const name=$('#user').value.trim().toLowerCase(),pw=$('#pass').value;
  if(!/^[a-z0-9_]{3,20}$/.test(name))return err.textContent='Username: 3–20 letters, numbers or _.';
@@ -120,13 +120,13 @@ function applyUser(u){const md=u.user_metadata||{},n=md.custom_claims&&md.custom
  const gi=(u.identities||[]).find(i=>i.provider==='github'),gd=gi&&gi.identity_data||{};
  const gh=String(gd.user_name||gd.preferred_username||(u.app_metadata&&u.app_metadata.provider==='github'?md.user_name:'')||'').toLowerCase();
  user=String(n).slice(0,40);try{sessionStorage.setItem('debuda.session',user)}catch{}
- adoptAv(md.avatar_url||md.picture);setOwner(!!gh&&OWNERS.includes(gh));
+ adoptAv(md.avatar_url||md.picture);setOwner(!!gh&&OWNERS.includes(gh));adminHook(u);
  $('#welcome').classList.add('hidden');$('#app').classList.remove('hidden');renderAcct();return user}
 (async()=>{if(!CFG.SUPABASE_URL||!CFG.SUPABASE_ANON_KEY)return;
  const h=new URLSearchParams(location.hash.slice(1));let at=h.get('access_token'),rt=h.get('refresh_token');
  if(at)history.replaceState(null,'',location.pathname);else rt=store.get('debuda.rt',null);
  if(!at&&!rt)return;
- try{let u;if(at){u=await sbUser(at);if(rt)store.set('debuda.rt',rt)}
-  else{const t=await sbRefresh(rt);store.set('debuda.rt',t.refresh_token);u=t.user||await sbUser(t.access_token)}
+ try{let u;if(at){u=await sbUser(at);tokSet(at,h.get('expires_at')||Math.floor(Date.now()/1000)+3600);if(rt)store.set('debuda.rt',rt)}
+  else{const t=await sbRefresh(rt);store.set('debuda.rt',t.refresh_token);tokSet(t.access_token,t.expires_at||Math.floor(Date.now()/1000)+(t.expires_in||3600));u=t.user||await sbUser(t.access_token)}
   const nm=applyUser(u);if(at)toast('Signed in as '+nm+(isOwner()?' 👑':''))}
  catch{if(at)toast('Login failed. Try again.');else try{localStorage.removeItem('debuda.rt')}catch{}}})();
