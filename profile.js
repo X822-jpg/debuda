@@ -222,14 +222,14 @@ function thumbOf(k,i){const it=PK[k][i],p=pf(),th=el('div','ith'),col=RAR[it[1]]
  if(k==='t'){const s=el('b','',it[0]);s.style.color=col;th.append(s)}else if(k==='f')th.append(avEl(p,56,i));
  else if(k==='n'){const s=el('b','',user?pname():'Your name');s.style.fontFamily=fam(it[0]);th.append(s)}
  else if(k==='b'){applyBg(th,it[3]);th.classList.add('swatch');th.append(el('b','tsh',user?pname():'Preview'))}else th.append(avEl(p,56,null,i));return th}
-function caseCard(c){const d=el('div','item'),th=el('div','ith cemo',c.em),top=odds(c).pop(),b1=el('button','btn ghost sm','Contents & odds'),b2=el('button','btn sm',SALES_OPEN?'Buy':'🔒 Alpha'),r=el('div','row2'),
+function caseCard(c){const d=el('div','item'),th=el('div','ith cemo',c.em),top=odds(c).pop(),b1=el('button','btn ghost sm','Contents & odds'),b2=el('button','btn sm',isOwner()?'👑 Unlocked':SALES_OPEN?'Buy':'🔒 Alpha'),r=el('div','row2'),
  tag=el('span','rar',c.xmas?'Limited · Xmas':c.pool.length+' items');tag.style.color=c.xmas?'#fb7185':'#9ca3af';tag.style.borderColor=tag.style.color;if(c.xmas)d.style.borderColor='#fb718566';
- b1.onclick=()=>openCase(c);b2.onclick=()=>toast(SALES_OPEN?'Case checkout is not built yet.':'Debuda is in Alpha — buying is not open yet.');if(!SALES_OPEN)b2.setAttribute('aria-disabled','true');
+ b1.onclick=()=>openCase(c);b2.onclick=()=>toast(isOwner()?'Owner: everything in this case is already unlocked.':SALES_OPEN?'Case checkout is not built yet.':'Debuda is in Alpha — buying is not open yet.');if(!SALES_OPEN&&!isOwner())b2.setAttribute('aria-disabled','true');
  r.append(b1,b2);d.append(th,tag,el('h4','',c.name),el('div','muted','Top drop: '+RAR[top.r][0]),el('div','pr',eur(c.price)),r);return d}
 let cmCase=null,cmSel=null,cmBusy=false;
 function cmRender(){liveCard($('#cmPv'));const a=$('#cmAct');a.replaceChildren();if(!cmSel)return;const [k,i]=cmSel,it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).includes(k+i),on=(p.eq||{})[k]===i;
  const b=el('button','btn sm',own?(on?'Unequip ':'Equip ')+it[0]:'🔒 '+it[0]+' (not owned)');if(!own)b.setAttribute('aria-disabled','true');b.onclick=()=>own?(buyEquip(k,i),cmRender()):toast('You do not own this item yet.');a.append(b)}
-function openCase(c){closeAll();cmCase=c;cmSel=null;pvw=noPv();$('#cmTitle').textContent=c.name;$('#cmKick').textContent=c.xmas?'LIMITED XMAS CASE · '+eur(c.price):'CASE · '+eur(c.price);
+function openCase(c){closeAll();cmCase=c;cmSel=null;pvw=noPv();$('#cmTitle').textContent=c.name;$('#cmBuy').textContent=isOwner()?'👑 Unlocked':'🔒 Alpha';$('#cmKick').textContent=c.xmas?'LIMITED XMAS CASE · '+eur(c.price):'CASE · '+eur(c.price);
  $('#cmReel').classList.remove('win');$('#cmReel').replaceChildren(el('span','muted','Press "Test open" for a free demo roll.'));
  $('#cmOdds').replaceChildren(...odds(c).map(q=>{const d=el('div','orow'),s=el('b','',RAR[q.r][0]);s.style.color=RAR[q.r][1];d.append(s,el('span','muted',q.n+' items'),el('span','',q.pct.toFixed(2)+'%'));return d}));
  $('#cmItems').replaceChildren(...c.pool.slice().sort((a,b)=>ORD.indexOf(PK[b[0]][b[1]][1])-ORD.indexOf(PK[a[0]][a[1]][1])).map(([k,i])=>{const it=PK[k][i],b=el('button','',it[0]);b.title=SEC[k]+' · '+RAR[it[1]][0];b.style.color=RAR[it[1]][1];b.style.borderColor=RAR[it[1]][1]+'88';b.onclick=()=>{pvw[k]=i;cmSel=[k,i];cmRender()};return b}));
@@ -287,15 +287,15 @@ function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).inclu
  else th.append(avEl(p,56,null,i));
  const b1=el('button','btn ghost sm',pvw[k]===i?'Previewing':'Preview'),b2=el('button','btn sm',own?(on?'Unequip':'Equip'):(SALES_OPEN?'Buy':'🔒 Alpha'));
  b1.onclick=()=>{pvw[k]=pvw[k]===i?null:i;renderShop()};b2.onclick=()=>buyEquip(k,i);if(!own&&!SALES_OPEN)b2.setAttribute('aria-disabled','true');
- const r=el('div','row2');r.append(b1,b2);d.append(th,rb,el('h4','',it[0]),el('div','pr',eur(it[2])),r);return d}
+ const r=el('div','row2');r.append(b1,b2);d.append(th,rb,el('h4','',it[0]),el('div','pr',i>=BASE?'Case exclusive':eur(it[2])),r);return d}
 function liveCard(host){const p=pf(),eq=p.eq||{},o={};for(const k of 'tfnbi')o[k]=pvw[k]!==null?pvw[k]:eq[k];pCard(host,p,o,user?pname():'Your name');
  if(Object.values(pvw).some(v=>v!==null)){const b=el('button','btn ghost sm','Reset preview');b.onclick=()=>{pvw=noPv();cmSel=null;shopKind==='c'&&cmCase&&!$('#caseModal').classList.contains('hidden')?cmRender():renderShop()};host.append(b)}}
-function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked.':'Owner accounts: log in with GitHub in this browser to unlock everything.';
+function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked, including all case and Xmas items.':'Owner accounts: log in with GitHub in this browser to unlock everything.';
  liveCard($('#shopPv'));
- $('#shopGrid').replaceChildren(...(shopKind==='c'?CASES.map(caseCard):PK[shopKind].slice(0,BASE).map((_,i)=>shopItem(shopKind,i))))}
+ $('#shopGrid').replaceChildren(...(shopKind==='c'?CASES.map(caseCard):PK[shopKind].map((_,i)=>i).filter(i=>i<BASE||isOwner()).map(i=>shopItem(shopKind,i))))}
 function renderProfile(){const p=pf();pCard($('#profCard'),p,p.eq||{},pname());$('#rnIn').value=pname();
  const box=$('#myItems');box.replaceChildren();const own=p.own||[];
- if(isOwner())return box.append(el('p','muted','Owner account: all '+Object.values(PK).reduce((a,b)=>a+b.length,0)+' items are unlocked. Equip them in the Shop.'));
+ if(isOwner())return box.append(el('p','muted','Owner account: all '+Object.values(PK).reduce((a,b)=>a+b.length,0)+' items are unlocked, including every case and Xmas item. Equip them in the Shop (case items are listed at the end of each tab).'));
  if(!own.length)return box.append(el('p','muted','You own no items yet. Preview them in the Shop — buying opens after Alpha.'));
  for(const id of own){const k=id[0],i=+id.slice(1),it=PK[k]&&PK[k][i];if(!it)continue;const b=el('button','btn ghost sm',(((p.eq||{})[k]===i)?'✓ ':'')+it[0]);b.onclick=()=>buyEquip(k,i);box.append(b)}}
 function setAv(a){const p=pf();p.av=a;pfSave(p);renderProfile();renderAcct()}
