@@ -98,3 +98,4 @@ footer .link{color:var(--mu);font-size:12px;letter-spacing:.1em;text-decoration:
 .chips2{display:flex;flex-wrap:wrap;gap:6px;max-height:170px;overflow:auto;margin:8px 0 12px}.chips2 button{background:#000;border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12px}
 .cm h4{margin:14px 0 6px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
 .xsnow{animation:xsnow 6s linear infinite}@keyframes xsnow{0%{background-position:0 0,0 0,center bottom}100%{background-position:35px 70px,-50px 100px,center bottom}}
+.evl{color:#fb7185;font-size:12px;padding:0;text-align:left}.evt{font-size:12px}
