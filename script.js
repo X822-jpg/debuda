@@ -21,7 +21,8 @@ function card(g){const b=el('button','game');b.type='button';b.dataset.game=g.id
  th.append(cover,el('span','game-status','Supported · Alpha'));
  const c=el('div','game-body'),features=el('span','game-features');
  ['Profile preview','Plan preview','UI settings'].forEach(feature=>features.append(el('span','game-feature',feature)));
- c.append(el('small','',g.cat),el('h3','',g.name),el('p','',g.desc),el('span','game-feature-label','Available in Alpha'),features,el('span','game-note','Visual preview only'),el('span','game-link','View game →'));
+ const link=el('span','game-link');link.append(document.createTextNode('View game'),el('span','game-arrow','↗'));
+ c.append(el('small','',g.cat),el('h3','',g.name),el('p','',g.desc),el('span','game-feature-label','Available in Alpha'),features,el('span','game-note','Visual preview only'),link);
  b.append(th,c);return b}
 function fill(sel,list){$(sel).replaceChildren(...list.map(card))}
 function renderCatalog(){const q=$('#search').value.trim().toLowerCase();
@@ -105,7 +106,7 @@ document.addEventListener('click',e=>{const t=e.target;
  const n=t.closest('[data-go]');if(n){e.preventDefault();return go(n.dataset.go)}
  const f=t.closest('[data-f]');if(f){filter=f.dataset.f;$$('[data-f]').forEach(b=>b.classList.toggle('on',b===f));renderCatalog()}
  const a=t.closest('[data-auth]');if(a)setMode(a.dataset.auth)});
-$('#gSave').onclick=()=>{if(!active)return;saved.has(active.id)?saved.delete(active.id):saved.add(active.id);store.set('debuda.saved',[...saved]);$('#gSave').textContent=saved.has(active.id)?'★ Saved':'☆ Save';renderLib()};
+$('#gSave').onclick=()=>{if(!active)return;const adding=!saved.has(active.id);adding?saved.add(active.id):saved.delete(active.id);store.set('debuda.saved',[...saved]);$('#gSave').textContent=saved.has(active.id)?'★ Saved':'☆ Save';renderLib();if(adding){toast('Saved to your library.');document.dispatchEvent(new CustomEvent('debuda:saved',{detail:{source:$('#gSave')}}))}};
 $('#search').addEventListener('input',()=>{if($('#gamesView').classList.contains('hidden'))go('games',true);renderCatalog()});
 $('#enterBtn').onclick=()=>{$('#welcome').classList.add('hidden');$('#app').classList.remove('hidden')};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const menuOpen=$('#menuToggle').getAttribute('aria-expanded')==='true';setMenu(false);closeAll();if(menuOpen)$('#menuToggle').focus()}

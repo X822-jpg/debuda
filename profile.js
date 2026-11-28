@@ -289,10 +289,11 @@ function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).inclu
  else if(k==='b'){applyBg(th,it[3]);th.classList.add('swatch');th.append(el('b','tsh',user?pname():'Preview'))}
  else th.append(avEl(p,56,null,i));
  const b1=el('button','btn ghost sm',pvw[k]===i?'Previewing':'Preview'),b2=el('button','btn sm',own?(on?'Unequip':'Equip'):(i>=BASE?'🔒 Case only':SALES_OPEN?'Buy':'🔒 Alpha'));
- b1.onclick=()=>{pvw[k]=pvw[k]===i?null:i;renderShop()};b2.onclick=()=>buyEquip(k,i);if(!own&&(!SALES_OPEN||i>=BASE))b2.setAttribute('aria-disabled','true');
+ b1.dataset.preview=k+i;b1.setAttribute('aria-pressed',String(pvw[k]===i));d.classList.toggle('is-previewing',pvw[k]===i);
+ b1.onclick=()=>{pvw[k]=pvw[k]===i?null:i;renderShop();const next=$('#shopGrid').querySelector('[data-preview="'+k+i+'"]');if(next)next.focus({preventScroll:true})};b2.onclick=()=>buyEquip(k,i);if(!own&&(!SALES_OPEN||i>=BASE))b2.setAttribute('aria-disabled','true');
  const r=el('div','row2');r.append(b1,b2);d.append(th,rb,el('h4','',it[0]));const cc=XC[k+i];if(cc){d.append(el('div','muted evt','Collectible — only in Christmas Case 2026'));const lk=el('button','link evl','(Christmas Event 2026)');lk.onclick=()=>openCase(cc);d.append(lk)}
  d.append(el('div','pr',XC[k+i]?'Collectible':eur(it[2])),r);return d}
-function liveCard(host){const p=pf(),eq=p.eq||{},o={};for(const k of 'tfnbi')o[k]=pvw[k]!==null?pvw[k]:eq[k];pCard(host,p,o,user?pname():'Your name');
+function liveCard(host){const p=pf(),eq=p.eq||{},o={};for(const k of 'tfnbi')o[k]=pvw[k]!==null?pvw[k]:eq[k];const previous=host.dataset.look,next=JSON.stringify(o);pCard(host,p,o,user?pname():'Your name');host.dataset.look=next;if(previous!==undefined&&previous!==next)queueMicrotask(()=>document.dispatchEvent(new CustomEvent('debuda:preview',{detail:{host}})));
  if(Object.values(pvw).some(v=>v!==null)){const b=el('button','btn ghost sm','Reset preview');b.onclick=()=>{pvw=noPv();cmSel=null;shopKind==='c'&&cmCase&&!$('#caseModal').classList.contains('hidden')?cmRender():renderShop()};host.append(b)}}
 function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked, including all case and Xmas items.':'Your fitting room is open. Purchases will arrive after Alpha.';
  liveCard($('#shopPv'));$$('[data-sk]').forEach(b=>{if(TABN[b.dataset.sk])b.textContent=TABN[b.dataset.sk]+' ('+PK[b.dataset.sk].length+')'});
