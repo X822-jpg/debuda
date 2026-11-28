@@ -3,7 +3,7 @@
  const reduced=matchMedia('(prefers-reduced-motion: reduce)'),fine=matchMedia('(min-width: 821px) and (hover: hover) and (pointer: fine)');
  const animations=new Set(),decorations=new Set(),previewAnimations=new WeakMap();
  const hero=document.querySelector('.hero'),plate=document.querySelector('.botanical-plate');
- let flowerFrame=0,cardFrame=0,activeCard=null,introStarted=false;
+ let flowerFrame=0,cardFrame=0,activeCard=null,introStarted=false,flowerDrag=null;
  let lean={x:0,y:0,r:0},target={x:0,y:0,r:0},cardPoint={x:0,y:0};
  const enabled=()=>!reduced.matches&&!document.hidden;
  function play(node,frames,options){
@@ -32,17 +32,44 @@
   plate.style.setProperty('--flower-y',lean.y.toFixed(3)+'px');
   plate.style.setProperty('--flower-lean',lean.r.toFixed(3)+'deg');
   flowerFrame=distance>.02?requestAnimationFrame(flowerTick):0;
+  if(!flowerFrame&&!flowerDrag)plate.classList.remove('flower-interacting');
  }
  function setFlower(x,y,r){target={x,y,r};if(!flowerFrame&&enabled())flowerFrame=requestAnimationFrame(flowerTick)}
+ function releaseFlower(event){
+  if(!flowerDrag||event.pointerId!==flowerDrag.id)return;
+  const id=flowerDrag.id;flowerDrag=null;
+  try{if(plate.hasPointerCapture(id))plate.releasePointerCapture(id)}catch{}
+  setFlower(0,0,0);
+ }
  if(hero&&plate){
+  const handle=plate.querySelector('.flower-handle');
+  plate.addEventListener('pointerdown',event=>{
+   if(!enabled()||flowerDrag||(event.pointerType!=='touch'&&!event.target.closest('.flower-handle')))return;
+   flowerDrag={id:event.pointerId,x:event.clientX,y:event.clientY};plate.classList.add('flower-interacting');
+   try{plate.setPointerCapture(event.pointerId)}catch{}
+   setFlower(0,-2,0);
+  },{passive:true});
+  plate.addEventListener('pointermove',event=>{
+   if(!flowerDrag||event.pointerId!==flowerDrag.id||!enabled())return;
+   const dx=event.clientX-flowerDrag.x,dy=event.clientY-flowerDrag.y;
+   setFlower(Math.max(-28,Math.min(28,dx*.25)),Math.max(-18,Math.min(18,dy*.2)),Math.max(-5,Math.min(5,dx*.04)));
+  },{passive:true});
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])plate.addEventListener(type,releaseFlower,{passive:true});
+  if(handle){
+   const directions={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+   handle.addEventListener('keydown',event=>{const direction=directions[event.key];if(!direction||!enabled())return;event.preventDefault();plate.classList.add('flower-interacting');setFlower(direction[0]*22,direction[1]*16,direction[0]*4)});
+   handle.addEventListener('keyup',event=>{if(directions[event.key]&&!flowerDrag)setFlower(0,0,0)});
+   handle.addEventListener('blur',()=>{if(!flowerDrag)setFlower(0,0,0)});
+   handle.addEventListener('click',event=>{if(event.detail===0)play(plate.querySelector('.flower-response'),[{transform:'translateY(0)'},{transform:'translateY(-8px) rotate(2deg)'},{transform:'translateY(0)'}],{duration:500,easing:'ease-out'})});
+  }
   hero.addEventListener('pointermove',event=>{
-   if(!fine.matches||event.pointerType==='touch'||!enabled())return;
+   if(flowerDrag||!fine.matches||event.pointerType==='touch'||!enabled())return;
    const box=plate.getBoundingClientRect();
    const x=Math.max(-1,Math.min(1,(event.clientX-box.left-box.width/2)/(box.width/2)));
    const y=Math.max(-1,Math.min(1,(event.clientY-box.top-box.height/2)/(box.height/2)));
    setFlower(x*7,y*4,x*3.5);
   },{passive:true});
-  hero.addEventListener('pointerleave',()=>setFlower(0,0,0),{passive:true});
+  hero.addEventListener('pointerleave',()=>{if(!flowerDrag)setFlower(0,0,0)},{passive:true});
  }
  function resetCard(){
   if(cardFrame)cancelAnimationFrame(cardFrame);cardFrame=0;
@@ -104,6 +131,8 @@
   });
  });
  function stop(){
+  if(flowerDrag){const id=flowerDrag.id;flowerDrag=null;try{if(plate.hasPointerCapture(id))plate.releasePointerCapture(id)}catch{}}
+  if(plate)plate.classList.remove('flower-interacting');
   if(flowerFrame)cancelAnimationFrame(flowerFrame);flowerFrame=0;lean={x:0,y:0,r:0};target={x:0,y:0,r:0};
   if(plate)for(const property of ['--flower-x','--flower-y','--flower-lean'])plate.style.removeProperty(property);
   resetCard();animations.forEach(animation=>animation.cancel());animations.clear();decorations.forEach(node=>node.remove());decorations.clear();

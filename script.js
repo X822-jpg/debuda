@@ -15,7 +15,7 @@ let user=null;try{user=sessionStorage.getItem('debuda.session')}catch{}
 
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600)}
-function card(g){const b=el('button','game');b.type='button';b.dataset.game=g.id;b.setAttribute('aria-label','View '+g.name+' — Supported in Alpha');
+function card(g){const b=el('article','game'),overview=el('button','game-overview');overview.type='button';overview.dataset.game=g.id;overview.setAttribute('aria-label','View '+g.name+' — Supported in Alpha');
  const th=el('div','thumb c-'+g.art),cover=el('img','game-cover');
  cover.src='assets/games/'+g.art+'.png';cover.alt='';cover.width=768;cover.height=432;cover.loading='lazy';
  th.append(cover,el('span','game-status','Supported · Alpha'));
@@ -23,7 +23,7 @@ function card(g){const b=el('button','game');b.type='button';b.dataset.game=g.id
  ['Profile preview','Plan preview','UI settings'].forEach(feature=>features.append(el('span','game-feature',feature)));
  const link=el('span','game-link');link.append(document.createTextNode('View game'),el('span','game-arrow','↗'));
  c.append(el('small','',g.cat),el('h3','',g.name),el('p','',g.desc),el('span','game-feature-label','Available in Alpha'),features,el('span','game-note','Visual preview only'),link);
- b.append(th,c);return b}
+ overview.append(th,c);const demo=el('button','game-demo','View GUI ↗');demo.type='button';demo.dataset.demo=g.id;demo.setAttribute('aria-label','View GUI for '+g.name);b.append(overview,demo);return b}
 function fill(sel,list){$(sel).replaceChildren(...list.map(card))}
 function renderCatalog(){const q=$('#search').value.trim().toLowerCase();
  const l=GAMES.filter(g=>(filter==='All'||g.cat===filter)&&(g.name+g.cat+g.desc).toLowerCase().includes(q));
@@ -110,7 +110,7 @@ $('#gSave').onclick=()=>{if(!active)return;const adding=!saved.has(active.id);ad
 $('#search').addEventListener('input',()=>{if($('#gamesView').classList.contains('hidden'))go('games',true);renderCatalog()});
 $('#enterBtn').onclick=()=>{$('#welcome').classList.add('hidden');$('#app').classList.remove('hidden')};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const menuOpen=$('#menuToggle').getAttribute('aria-expanded')==='true';setMenu(false);closeAll();if(menuOpen)$('#menuToggle').focus()}
- if(e.key==='Tab'){const modal=$$('.back').find(m=>!m.classList.contains('hidden'));if(!modal)return;const focusable=[...modal.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled]),a[href],[tabindex="0"]')].filter(node=>node.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+ if(e.key==='Tab'){const modal=$$('.back').find(m=>!m.classList.contains('hidden'));if(!modal)return;const focusable=[...modal.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled]),a[href],[tabindex="0"]')].filter(node=>node.tabIndex>=0&&node.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 fill('#featured',GAMES.slice(0,3));renderCatalog();renderLib();renderAcct();setDays(7);
 
 let luaText='';
