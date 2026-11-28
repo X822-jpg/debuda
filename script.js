@@ -15,7 +15,7 @@ let user=null;try{user=sessionStorage.getItem('debuda.session')}catch{}
 
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600)}
-function card(g){const b=el('button','game');b.dataset.game=g.id;
+function card(g){const b=el('button','game');b.type='button';b.dataset.game=g.id;b.setAttribute('aria-label','View '+g.name+' — Supported in Alpha');
  const th=el('div','thumb c-'+g.art),cover=el('img','game-cover');
  cover.src='assets/games/'+g.art+'.png';cover.alt='';cover.width=768;cover.height=432;cover.loading='lazy';
  th.append(cover,el('span','game-status','Supported · Alpha'));
@@ -32,8 +32,9 @@ function setMenu(expanded){$('.top').classList.toggle('menu-open',expanded);$('#
 $('#menuToggle').onclick=()=>setMenu($('#menuToggle').getAttribute('aria-expanded')!=='true');
 function go(v,keepMenu=false){if(!keepMenu)setMenu(false);if(v==='profile'&&!user){openAuth('login');return}['home','games','library','roblox','shop','profile'].forEach(x=>$('#'+x+'View').classList.toggle('hidden',x!==v));
  $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.go===v));if(v==='games')renderCatalog();if(v==='library')renderLib();if(v==='roblox')loadLua();if(v==='shop')renderShop();if(v==='profile')renderProfile();scrollTo({top:0})}
-function open(id){$('#'+id).classList.remove('hidden');document.body.style.overflow='hidden'}
-function closeAll(){$$('.back').forEach(m=>m.classList.add('hidden'));document.body.style.overflow=''}
+let dialogReturnFocus=null;
+function open(id){const modal=$('#'+id);dialogReturnFocus=document.activeElement;modal.classList.remove('hidden');document.body.style.overflow='hidden';$('#app').inert=true;requestAnimationFrame(()=>{const target=modal.querySelector('input:not([type=range]):not([type=checkbox])')||modal.querySelector('button:not([disabled]),[href]');if(target)target.focus()})}
+function closeAll(){const wasOpen=$$('.back').some(m=>!m.classList.contains('hidden'));$$('.back').forEach(m=>m.classList.add('hidden'));document.body.style.overflow='';$('#app').inert=false;if(wasOpen&&dialogReturnFocus&&document.contains(dialogReturnFocus))dialogReturnFocus.focus();else if(wasOpen)$('#main').focus();dialogReturnFocus=null}
 
 // ---- pricing: longer = cheaper ----
 function price(d){let i=1;while(i<ANCHORS.length-1&&d>ANCHORS[i][0])i++;const[a,b]=[ANCHORS[i-1],ANCHORS[i]];const total=Math.min(2500,Math.max(100,Math.round(a[1]+(b[1]-a[1])*(d-a[0])/(b[0]-a[0]))));return{total,full:d*100,per:total/d}}
@@ -98,7 +99,7 @@ $('#chips').addEventListener('click',e=>{if(e.target.dataset.d)setDays(e.target.
 document.addEventListener('click',e=>{const t=e.target;
  if(t.closest('[data-buy]'))return openBuy();
  const g=t.closest('[data-game]');if(g){active=GAMES.find(x=>x.id===g.dataset.game);if(!active)return;
-  $('#gTitle').textContent=active.name;$('#gCat').textContent=active.cat.toUpperCase()+' · '+active.tag;$('#gDesc').textContent=active.desc;$('#gEmoji').textContent=active.emoji;
+  $('#gTitle').textContent=active.name;$('#gCat').textContent=active.cat.toUpperCase()+' · '+active.tag;$('#gDesc').textContent=active.desc;$('#gEmoji').textContent=active.emoji;$('#gCover').src='assets/games/'+active.art+'.png';$('#gCover').alt=active.name+' cover';
   $('#gArt').className='art c-'+active.art;$('#gSave').textContent=saved.has(active.id)?'★ Saved':'☆ Save';return open('gameModal')}
  if(t.closest('[data-close]')||t.classList.contains('back'))return closeAll();
  const n=t.closest('[data-go]');if(n){e.preventDefault();return go(n.dataset.go)}
@@ -107,7 +108,8 @@ document.addEventListener('click',e=>{const t=e.target;
 $('#gSave').onclick=()=>{if(!active)return;saved.has(active.id)?saved.delete(active.id):saved.add(active.id);store.set('debuda.saved',[...saved]);$('#gSave').textContent=saved.has(active.id)?'★ Saved':'☆ Save';renderLib()};
 $('#search').addEventListener('input',()=>{if($('#gamesView').classList.contains('hidden'))go('games',true);renderCatalog()});
 $('#enterBtn').onclick=()=>{$('#welcome').classList.add('hidden');$('#app').classList.remove('hidden')};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){const menuOpen=$('#menuToggle').getAttribute('aria-expanded')==='true';setMenu(false);closeAll();if(menuOpen)$('#menuToggle').focus()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const menuOpen=$('#menuToggle').getAttribute('aria-expanded')==='true';setMenu(false);closeAll();if(menuOpen)$('#menuToggle').focus()}
+ if(e.key==='Tab'){const modal=$$('.back').find(m=>!m.classList.contains('hidden'));if(!modal)return;const focusable=[...modal.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled]),a[href],[tabindex="0"]')].filter(node=>node.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 fill('#featured',GAMES.slice(0,3));renderCatalog();renderLib();renderAcct();setDays(7);
 
 let luaText='';

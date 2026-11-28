@@ -6,7 +6,7 @@
  function apply(theme){
   root.dataset.theme=theme;
   const light=theme==='light';
-  document.querySelector('meta[name="theme-color"]').content=light?'#f7f5fc':'#000000';
+  document.querySelector('meta[name="theme-color"]').content=light?'#f6f4f0':'#141417';
   document.querySelectorAll('[data-theme-toggle]').forEach(button=>{
    button.setAttribute('aria-label','Switch to '+(light?'dark':'light')+' theme');
    button.querySelector('[data-theme-icon]').textContent=light?'◐':'☀';

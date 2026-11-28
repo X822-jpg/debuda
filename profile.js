@@ -294,7 +294,7 @@ function shopItem(k,i){const it=PK[k][i],p=pf(),own=isOwner()||(p.own||[]).inclu
  d.append(el('div','pr',XC[k+i]?'Collectible':eur(it[2])),r);return d}
 function liveCard(host){const p=pf(),eq=p.eq||{},o={};for(const k of 'tfnbi')o[k]=pvw[k]!==null?pvw[k]:eq[k];pCard(host,p,o,user?pname():'Your name');
  if(Object.values(pvw).some(v=>v!==null)){const b=el('button','btn ghost sm','Reset preview');b.onclick=()=>{pvw=noPv();cmSel=null;shopKind==='c'&&cmCase&&!$('#caseModal').classList.contains('hidden')?cmRender():renderShop()};host.append(b)}}
-function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked, including all case and Xmas items.':'Owner accounts: log in with GitHub in this browser to unlock everything.';
+function renderShop(){$('#shopHint').textContent=isOwner()?'👑 Owner account: everything is unlocked, including all case and Xmas items.':'Your fitting room is open. Purchases will arrive after Alpha.';
  liveCard($('#shopPv'));$$('[data-sk]').forEach(b=>{if(TABN[b.dataset.sk])b.textContent=TABN[b.dataset.sk]+' ('+PK[b.dataset.sk].length+')'});
  $('#shopGrid').replaceChildren(...(shopKind==='c'?CASES.map(caseCard):PK[shopKind].map((_,i)=>shopItem(shopKind,i))))}
 function renderProfile(){const p=pf();pCard($('#profCard'),p,p.eq||{},pname());$('#rnIn').value=pname();
