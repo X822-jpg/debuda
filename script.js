@@ -16,14 +16,21 @@ let user=null;try{user=sessionStorage.getItem('debuda.session')}catch{}
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2600)}
 function card(g){const b=el('button','game');b.dataset.game=g.id;
- const th=el('div','thumb c-'+g.art);th.append(el('span','',g.emoji));
- const c=el('div');c.append(el('small','',g.cat+' · '+g.tag),el('h3','',g.name),el('p','',g.desc));b.append(th,c);return b}
+ const th=el('div','thumb c-'+g.art),cover=el('img','game-cover');
+ cover.src='assets/games/'+g.art+'.png';cover.alt='';cover.width=768;cover.height=432;cover.loading='lazy';
+ th.append(cover,el('span','game-status','Supported · Alpha'));
+ const c=el('div','game-body'),features=el('span','game-features');
+ ['Profile preview','Plan preview','UI settings'].forEach(feature=>features.append(el('span','game-feature',feature)));
+ c.append(el('small','',g.cat),el('h3','',g.name),el('p','',g.desc),el('span','game-feature-label','Available in Alpha'),features,el('span','game-note','Visual preview only'),el('span','game-link','View game →'));
+ b.append(th,c);return b}
 function fill(sel,list){$(sel).replaceChildren(...list.map(card))}
 function renderCatalog(){const q=$('#search').value.trim().toLowerCase();
  const l=GAMES.filter(g=>(filter==='All'||g.cat===filter)&&(g.name+g.cat+g.desc).toLowerCase().includes(q));
  fill('#catalog',l);$('#none').classList.toggle('hidden',l.length>0)}
 function renderLib(){const l=GAMES.filter(g=>saved.has(g.id));fill('#libGrid',l);$('#libEmpty').classList.toggle('hidden',l.length>0)}
-function go(v){if(v==='profile'&&!user){openAuth('login');return}['home','games','library','roblox','shop','profile'].forEach(x=>$('#'+x+'View').classList.toggle('hidden',x!==v));
+function setMenu(expanded){$('.top').classList.toggle('menu-open',expanded);$('#menuToggle').setAttribute('aria-expanded',String(expanded));$('#menuToggle').setAttribute('aria-label',expanded?'Close menu':'Open menu')}
+$('#menuToggle').onclick=()=>setMenu($('#menuToggle').getAttribute('aria-expanded')!=='true');
+function go(v,keepMenu=false){if(!keepMenu)setMenu(false);if(v==='profile'&&!user){openAuth('login');return}['home','games','library','roblox','shop','profile'].forEach(x=>$('#'+x+'View').classList.toggle('hidden',x!==v));
  $$('.nav').forEach(b=>b.classList.toggle('on',b.dataset.go===v));if(v==='games')renderCatalog();if(v==='library')renderLib();if(v==='roblox')loadLua();if(v==='shop')renderShop();if(v==='profile')renderProfile();scrollTo({top:0})}
 function open(id){$('#'+id).classList.remove('hidden');document.body.style.overflow='hidden'}
 function closeAll(){$$('.back').forEach(m=>m.classList.add('hidden'));document.body.style.overflow=''}
@@ -46,7 +53,7 @@ function strength(p){let s=0;if(p.length>=8)s++;if(p.length>=12)s++;if(/[a-z]/.t
 function setMode(m){mode=m;const r=m==='register';$$('[data-auth]').forEach(b=>b.classList.toggle('on',b.dataset.auth===m));
  $('#regOnly').classList.toggle('hidden',!r);$('#aTitle').textContent=r?'Create account':'Welcome back';$('#authBtn').textContent=r?'Register':'Log in';
  $('#pass').autocomplete=r?'new-password':'current-password';$('#authErr').textContent=''}
-function openAuth(m){closeAll();setMode(m||'login');open('authModal');$('#user').focus()}
+function openAuth(m){setMenu(false);closeAll();setMode(m||'login');open('authModal');$('#user').focus()}
 function renderAcct(){const a=$('#acct');a.replaceChildren();
  if(!user){const l=el('button','btn ghost','Log in'),r=el('button','btn','Register');l.onclick=()=>openAuth('login');r.onclick=()=>openAuth('register');a.append(l,r);return}
  const u=store.get('debuda.users',{})[user],last=u&&u.orders&&u.orders[u.orders.length-1];
@@ -98,9 +105,9 @@ document.addEventListener('click',e=>{const t=e.target;
  const f=t.closest('[data-f]');if(f){filter=f.dataset.f;$$('[data-f]').forEach(b=>b.classList.toggle('on',b===f));renderCatalog()}
  const a=t.closest('[data-auth]');if(a)setMode(a.dataset.auth)});
 $('#gSave').onclick=()=>{if(!active)return;saved.has(active.id)?saved.delete(active.id):saved.add(active.id);store.set('debuda.saved',[...saved]);$('#gSave').textContent=saved.has(active.id)?'★ Saved':'☆ Save';renderLib()};
-$('#search').addEventListener('input',()=>{if($('#gamesView').classList.contains('hidden'))go('games');renderCatalog()});
+$('#search').addEventListener('input',()=>{if($('#gamesView').classList.contains('hidden'))go('games',true);renderCatalog()});
 $('#enterBtn').onclick=()=>{$('#welcome').classList.add('hidden');$('#app').classList.remove('hidden')};
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const menuOpen=$('#menuToggle').getAttribute('aria-expanded')==='true';setMenu(false);closeAll();if(menuOpen)$('#menuToggle').focus()}});
 fill('#featured',GAMES.slice(0,3));renderCatalog();renderLib();renderAcct();setDays(7);
 
 let luaText='';

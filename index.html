@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#000"><meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000"><meta name="color-scheme" content="dark light">
+<script src="theme.js"></script>
 <meta name="description" content="Debuda — made only for Roblox. Supports MM2, Deagle Duels and Da Hood.">
 <title>Debuda</title>
 <link rel="icon" type="image/png" href="debudalogo.png"><link rel="apple-touch-icon" href="debudalogo.png">
@@ -19,7 +20,7 @@
 <radialGradient id="pg" cx="50%" cy="100%" r="100%"><stop offset="0" stop-color="#f5d0fe"/><stop offset=".6" stop-color="#c026d3"/><stop offset="1" stop-color="#701a75"/></radialGradient>
 <radialGradient id="cg"><stop offset="0" stop-color="#fef08a"/><stop offset="1" stop-color="#ca8a04"/></radialGradient>
 </defs>
-<g class="plant">
+<g class="plant" id="mascotPlant">
 <path class="stem" d="M110 200C80 320 150 430 105 560C60 690 135 790 100 900" fill="none" stroke="#15803d" stroke-width="7" stroke-linecap="round"/>
 <g class="leaves"><use href="#lf" transform="translate(104 306) rotate(205)" fill="#15803d"/><use href="#lf" transform="translate(115 394) rotate(-25)" fill="#16a34a"/><use href="#lf" transform="translate(120 484) rotate(205)" fill="#15803d"/><use href="#lf" transform="translate(90 652) rotate(-25)" fill="#16a34a"/><use href="#lf" transform="translate(101 754) rotate(205)" fill="#15803d"/><use href="#lf" transform="translate(110 835) rotate(-25)" fill="#16a34a"/></g>
 <g class="bloom" transform="translate(110 170)">
@@ -34,6 +35,7 @@
 </aside>
 
 <section class="welcome" id="welcome">
+<button class="theme-toggle welcome-theme" type="button" data-theme-toggle aria-label="Switch to light theme"><span data-theme-icon aria-hidden="true">☀</span><span data-theme-label>Light</span></button>
 <img src="debudalogo.png" alt="Debuda logo" width="150" height="150">
 <p class="kicker">ROBLOX ONLY</p>
 <h1>Hi, welcome to <span>Debuda</span></h1>
@@ -44,10 +46,12 @@
 <div class="app hidden" id="app">
 <div class="alphabar">⚠ DEBUDA IS IN ALPHA — buying is not open yet</div>
 <header class="top">
-<a class="brand" href="#" data-go="home"><img src="debudalogo.png" alt="" width="34" height="34"><b>DEBUDA</b></a>
-<nav id="nav"><button class="nav on" data-go="home">Home</button><button class="nav" data-go="games">Supported games</button><button class="nav" data-go="library">Library</button><button class="nav" data-go="roblox">Roblox</button><button class="nav" data-go="shop">Shop</button><button class="nav" data-go="profile">Profile</button></nav>
+<a class="brand" href="#" data-go="home"><img src="debudalogo.png" alt="" width="34" height="34"><svg class="mobile-mascot" viewBox="0 55 230 300" aria-hidden="true"><use href="#mascotPlant"/></svg><b>DEBUDA</b></a>
+<nav id="nav" aria-label="Main navigation"><button class="nav on" data-go="home">Home</button><button class="nav" data-go="games">Supported games</button><button class="nav" data-go="library">Library</button><button class="nav" data-go="roblox">Roblox</button><button class="nav" data-go="shop">Shop</button><button class="nav" data-go="profile">Profile</button></nav>
 <input id="search" type="search" placeholder="Search supported games…" maxlength="40" aria-label="Search games" autocomplete="off">
 <div class="acct" id="acct"></div>
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme"><span data-theme-icon aria-hidden="true">☀</span><span data-theme-label>Light</span></button>
+<button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="nav search acct" aria-label="Open menu"><span aria-hidden="true">☰</span><span>Menu</span></button>
 </header>
 <main>
 <section class="view" id="homeView">
